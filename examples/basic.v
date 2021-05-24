@@ -1,14 +1,3 @@
-# vSFML
-
-V binding for the [Simple and Fast Multimedia Library](https://www.sfml-dev.org/) (SFML). Based on the SFML C binding.
-
-All SFML features are available with the exception of the thread and mutex functions (use the ones from the vlib).
-
-Only tested on Ubuntu 18.04, but should work on other operating systems.
-
-## Examples
-
-```v
 module main
 
 import vsfml.graphics
@@ -56,13 +45,3 @@ fn main() {
 		}
 	}
 }
-```
-
-The `examples` directory contains a port of the SFML [Tennis](https://github.com/SFML/SFML/tree/master/examples/tennis) example.
-
-## Dependencies
-
-### Linux
-
-#### Ubuntu
-`$ sudo apt install libcsfml-dev`
