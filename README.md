@@ -6,6 +6,14 @@ All SFML features are available with the exception of the thread and mutex funct
 
 Only tested on Ubuntu 18.04, but should work on other operating systems.
 
+# API
+
+ * [system](https://jmgr.github.io/vsfml/system.html)
+ * [window](https://jmgr.github.io/vsfml/window.html)
+ * [graphics](https://jmgr.github.io/vsfml/graphics.html)
+ * [network](https://jmgr.github.io/vsfml/network.html)
+ * [audio](https://jmgr.github.io/vsfml/audio.html)
+
 ## Examples
 
 ```v
@@ -58,7 +66,7 @@ fn main() {
 }
 ```
 
-The `examples` directory contains a port of the SFML [Tennis](https://github.com/SFML/SFML/tree/master/examples/tennis) example.
+The [examples](https://github.com/Jmgr/vsfml/tree/master/examples) directory contains a port of the SFML [Tennis](https://github.com/SFML/SFML/tree/master/examples/tennis) example.
 
 ## Dependencies
 
