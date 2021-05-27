@@ -17,6 +17,7 @@ fn main() {
 	sfml_logo.set_position(system.Vector2f{170, 50})
 
 	for win.is_open() {
+		// Process all events
 		for {
 			event := win.poll_event() or { break }
 			match event {
@@ -36,12 +37,13 @@ fn main() {
 				}
 				else {}
 			}
-
-			win.clear(graphics.color_from_rgb(50, 50, 50))
-
-			win.draw_sprite(object: sfml_logo)
-
-			win.display()
 		}
+
+		// Display
+		win.clear(graphics.color_from_rgb(50, 50, 50))
+
+		win.draw_sprite(object: sfml_logo)
+
+		win.display()
 	}
 }
