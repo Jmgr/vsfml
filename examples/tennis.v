@@ -173,8 +173,6 @@ fn (mut t Tennis) game_loop() ? {
 		// Display things on screen
 		t.win.display()
 	}
-
-	return none
 }
 
 fn (mut t Tennis) start_playing() ? {
