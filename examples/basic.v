@@ -3,6 +3,7 @@ module main
 import vsfml.graphics
 import vsfml.window
 import vsfml.system
+import os
 
 fn main() {
 	win := graphics.new_render_window(
@@ -11,7 +12,9 @@ fn main() {
 	) ?
 	win.set_vertical_sync_enabled(true)
 
-	sfml_logo_texture := graphics.new_texture_from_file(filename: 'resources/sfml_logo.png') ?
+	sfml_logo_texture := graphics.new_texture_from_file(
+		filename: os.resource_abs_path('resources/sfml_logo.png')
+	) ?
 	sfml_logo := graphics.new_sprite() ?
 	sfml_logo.set_texture(sfml_logo_texture, true)
 	sfml_logo.set_position(system.Vector2f{170, 50})
