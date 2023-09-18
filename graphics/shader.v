@@ -256,7 +256,6 @@ pub fn (s &Shader) set_texture_uniform(name string, texture &Texture) {
 // known in advance.
 // The corresponding parameter in the shader must be a 2D texture
 // (\p sampler2D GLSL type).
-// Example:
 pub fn (s &Shader) set_current_texture_uniform(name string) {
 	unsafe {
 		C.sfShader_setCurrentTextureUniform(&C.sfShader(s), name.str)

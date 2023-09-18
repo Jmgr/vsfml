@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="x-ua-compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>vsfml.system | vdoc</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+		<link rel="manifest" href="site.webmanifest" />
+		<link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5" />
+		<meta name="msapplication-TileColor" content="#da532c" />
+		<meta name="theme-color" content="#ffffff" />
+		<link rel="stylesheet" href="doc.css" />
+		<link rel="stylesheet" href="normalize.css" />
+		<script src="dark-mode.js"></script>
+	</head>
+
+	<body>
+		<div><a id="skip-to-content-link" href="#main-content">Skip to content</a></div>
+		<div id="page">
+			<header class="doc-nav hidden">
+				<div class="heading-container">
+					<div class="heading">
+						<div class="info">
+							<div class="module">vsfml</div>
+							<div class="toggle-version-container">
+								<span>0.1 1ce4213</span>
+								<div
+									id="dark-mode-toggle"
+									role="switch"
+									aria-checked="false"
+									aria-label="Toggle dark mode"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" class="light-icon" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="dark-icon" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z"/></g><path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z"/></g></g></svg>
+
+								</div>
+							</div>
+							<svg xmlns="http://www.w3.org/2000/svg" id="toggle-menu" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+
+						</div>
+						<div id="search">
+							<input type="text" placeholder="Search... (beta)" autocomplete="off" />
+						</div>
+					</div>
+				</div>
+				<nav class="search hidden"></nav>
+				<nav class="content hidden">
+					<ul>
+						<li class="open"><div class="menu-row"><svg xmlns="http://www.w3.org/2000/svg" class="dropdown-arrow" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5z"/></svg><a href="#">vsfml</a></div><ul><li><a href="./vsfml.audio.html">audio</a></li><li><a href="./vsfml.graphics.html">graphics</a></li><li><a href="./vsfml.network.html">network</a></li><li class="active"><a href="./vsfml.system.html">system</a></li><li><a href="./vsfml.window.html">window</a></li></ul></li>
+					</ul>
+				</nav>
+			</header>
+			<div class="doc-scrollview" tabindex="-1" id="main-content">
+				<div class="doc-container">
+					<div class="doc-content">
+								<section id="readme_vsfml.system" class="doc-node">
+			<div class="title"><h1> vsfml.system <a href="#readme_vsfml.system">#</a></h1></div>
+
+</section>
+
+		<section id="microseconds" class="doc-node">
+			<div class="title"><h2>fn microseconds <a href="#microseconds">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">microseconds</span><span class="token punctuation">(</span>amount <span class="token builtin">i64</span><span class="token punctuation">)</span> Time</code></pre>
+<p>microseconds: construct a time value from a number of microseconds</p>
+
+</section>
+		<section id="milliseconds" class="doc-node">
+			<div class="title"><h2>fn milliseconds <a href="#milliseconds">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">milliseconds</span><span class="token punctuation">(</span>amount <span class="token builtin">int</span><span class="token punctuation">)</span> Time</code></pre>
+<p>milliseconds: construct a time value from a number of milliseconds</p>
+
+</section>
+		<section id="new_clock" class="doc-node">
+			<div class="title"><h2>fn new_clock <a href="#new_clock">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">new_clock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!</span><span class="token operator">&</span>Clock</code></pre>
+<p>new_clock: create a new clock and start it</p>
+
+</section>
+		<section id="seconds" class="doc-node">
+			<div class="title"><h2>fn seconds <a href="#seconds">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">seconds</span><span class="token punctuation">(</span>amount <span class="token builtin">f32</span><span class="token punctuation">)</span> Time</code></pre>
+<p>seconds: construct a time value from a number of seconds</p>
+
+</section>
+		<section id="sleep" class="doc-node">
+			<div class="title"><h2>fn sleep <a href="#sleep">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">sleep</span><span class="token punctuation">(</span>duration Time<span class="token punctuation">)</span></code></pre>
+<p>sleep: make the current thread sleep for a given duration Sleep is the best way to block a program or one of its
+threads, as it doesn't consume any CPU power.</p>
+
+</section>
+		<section id="Clock.copy" class="doc-node">
+			<div class="title"><h2>fn (Clock) copy <a href="#Clock.copy">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>c <span class="token operator">&</span>Clock<span class="token punctuation">)</span> <span class="token function">copy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!</span><span class="token operator">&</span>Clock</code></pre>
+<p>copy: create a new clock by copying an existing one</p>
+
+</section>
+		<section id="Clock.free" class="doc-node">
+			<div class="title"><h2>fn (Clock) free <a href="#Clock.free">#</a></h2></div><div class="attributes"><div class="attribute">unsafe</div></div>
+<pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>c <span class="token operator">&</span>Clock<span class="token punctuation">)</span> <span class="token function">free</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+<p>free: destroy a clock</p>
+
+</section>
+		<section id="Clock.get_elapsed_time" class="doc-node">
+			<div class="title"><h2>fn (Clock) get_elapsed_time <a href="#Clock.get_elapsed_time">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>c <span class="token operator">&</span>Clock<span class="token punctuation">)</span> <span class="token function">get_elapsed_time</span><span class="token punctuation">(</span><span class="token punctuation">)</span> Time</code></pre>
+<p>get_elapsed_time: get the time elapsed in a clock This function returns the time elapsed since the last call to restart (or the construction of the object if
+restart has not been called).</p>
+
+</section>
+		<section id="Clock.restart" class="doc-node">
+			<div class="title"><h2>fn (Clock) restart <a href="#Clock.restart">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>c <span class="token operator">&</span>Clock<span class="token punctuation">)</span> <span class="token function">restart</span><span class="token punctuation">(</span><span class="token punctuation">)</span> Time</code></pre>
+<p>restart: restart a clock
+This function puts the time counter back to zero.<br>
+It also returns the time elapsed since the clock was started.</p>
+
+</section>
+		<section id="InputStream" class="doc-node">
+			<div class="title"><h2>type InputStream <a href="#InputStream">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> InputStream <span class="token operator">=</span> C<span class="token punctuation">.</span>sfInputStream</code></pre>
+<p>InputStream: set of callbacks that allow users to define custom file streams</p>
+
+</section>
+		<section id="InputStreamGetSizeFunc" class="doc-node">
+			<div class="title"><h2>type InputStreamGetSizeFunc <a href="#InputStreamGetSizeFunc">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> InputStreamGetSizeFunc <span class="token operator">=</span> <span class="token keyword">fn</span> <span class="token punctuation">(</span><span class="token builtin">voidptr</span><span class="token punctuation">)</span> <span class="token builtin">i64</span></code></pre>
+
+
+</section>
+		<section id="InputStreamReadFunc" class="doc-node">
+			<div class="title"><h2>type InputStreamReadFunc <a href="#InputStreamReadFunc">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> InputStreamReadFunc <span class="token operator">=</span> <span class="token keyword">fn</span> <span class="token punctuation">(</span><span class="token builtin">voidptr</span><span class="token punctuation">,</span> <span class="token builtin">i64</span><span class="token punctuation">,</span> <span class="token builtin">voidptr</span><span class="token punctuation">)</span> <span class="token builtin">i64</span></code></pre>
+
+
+</section>
+		<section id="InputStreamSeekFunc" class="doc-node">
+			<div class="title"><h2>type InputStreamSeekFunc <a href="#InputStreamSeekFunc">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> InputStreamSeekFunc <span class="token operator">=</span> <span class="token keyword">fn</span> <span class="token punctuation">(</span><span class="token builtin">i64</span><span class="token punctuation">,</span> <span class="token builtin">voidptr</span><span class="token punctuation">)</span> <span class="token builtin">i64</span></code></pre>
+
+
+</section>
+		<section id="InputStreamTellFunc" class="doc-node">
+			<div class="title"><h2>type InputStreamTellFunc <a href="#InputStreamTellFunc">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> InputStreamTellFunc <span class="token operator">=</span> <span class="token keyword">fn</span> <span class="token punctuation">(</span><span class="token builtin">voidptr</span><span class="token punctuation">)</span> <span class="token builtin">i64</span></code></pre>
+
+
+</section>
+		<section id="Mutex" class="doc-node">
+			<div class="title"><h2>type Mutex <a href="#Mutex">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Mutex <span class="token operator">=</span> C<span class="token punctuation">.</span>sfMutex</code></pre>
+<p>Mutex</p>
+
+</section>
+		<section id="Thread" class="doc-node">
+			<div class="title"><h2>type Thread <a href="#Thread">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Thread <span class="token operator">=</span> C<span class="token punctuation">.</span>sfThread</code></pre>
+<p>Thread</p>
+
+</section>
+		<section id="Time" class="doc-node">
+			<div class="title"><h2>type Time <a href="#Time">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Time <span class="token operator">=</span> C<span class="token punctuation">.</span>sfTime</code></pre>
+<p>Time: represents a time value</p>
+
+</section>
+		<section id="Time.as_seconds" class="doc-node">
+			<div class="title"><h2>fn (Time) as_seconds <a href="#Time.as_seconds">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>t Time<span class="token punctuation">)</span> <span class="token function">as_seconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">f32</span></code></pre>
+<p>as_seconds: return a time value as a number of seconds</p>
+
+</section>
+		<section id="Time.as_milliseconds" class="doc-node">
+			<div class="title"><h2>fn (Time) as_milliseconds <a href="#Time.as_milliseconds">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>t Time<span class="token punctuation">)</span> <span class="token function">as_milliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">int</span></code></pre>
+<p>as_milliseconds: return a time value as a number of milliseconds</p>
+
+</section>
+		<section id="Time.as_microseconds" class="doc-node">
+			<div class="title"><h2>fn (Time) as_microseconds <a href="#Time.as_microseconds">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token punctuation">(</span>t Time<span class="token punctuation">)</span> <span class="token function">as_microseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">i64</span></code></pre>
+<p>as_microseconds: return a time value as a number of microseconds</p>
+
+</section>
+		<section id="Vector2f" class="doc-node">
+			<div class="title"><h2>type Vector2f <a href="#Vector2f">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Vector2f <span class="token operator">=</span> C<span class="token punctuation">.</span>sfVector2f</code></pre>
+<p>Vector2f: 2-component vector of floats</p>
+
+</section>
+		<section id="Vector2i" class="doc-node">
+			<div class="title"><h2>type Vector2i <a href="#Vector2i">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Vector2i <span class="token operator">=</span> C<span class="token punctuation">.</span>sfVector2i</code></pre>
+<p>Vector2i: 2-component vector of integers</p>
+
+</section>
+		<section id="Vector2u" class="doc-node">
+			<div class="title"><h2>type Vector2u <a href="#Vector2u">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Vector2u <span class="token operator">=</span> C<span class="token punctuation">.</span>sfVector2u</code></pre>
+<p>Vector2u: 2-component vector of unsigned integers</p>
+
+</section>
+		<section id="Vector3f" class="doc-node">
+			<div class="title"><h2>type Vector3f <a href="#Vector3f">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> Vector3f <span class="token operator">=</span> C<span class="token punctuation">.</span>sfVector3f</code></pre>
+<p>Vector3f: 3-component vector of floats</p>
+
+</section>
+		<section id="C.sfTime" class="doc-node">
+			<div class="title"><h2>struct C.sfTime <a href="#C.sfTime">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> C<span class="token punctuation">.</span><span class="token symbol">sfTime</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span><span class="token punctuation">:</span>
+	microseconds <span class="token builtin">i64</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+		<section id="C.sfVector2f" class="doc-node">
+			<div class="title"><h2>struct C.sfVector2f <a href="#C.sfVector2f">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> C<span class="token punctuation">.</span><span class="token symbol">sfVector2f</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span><span class="token punctuation">:</span>
+	x <span class="token builtin">f32</span>
+	y <span class="token builtin">f32</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+		<section id="C.sfVector2i" class="doc-node">
+			<div class="title"><h2>struct C.sfVector2i <a href="#C.sfVector2i">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> C<span class="token punctuation">.</span><span class="token symbol">sfVector2i</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span><span class="token punctuation">:</span>
+	x <span class="token builtin">int</span>
+	y <span class="token builtin">int</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+		<section id="C.sfVector2u" class="doc-node">
+			<div class="title"><h2>struct C.sfVector2u <a href="#C.sfVector2u">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> C<span class="token punctuation">.</span><span class="token symbol">sfVector2u</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span><span class="token punctuation">:</span>
+	x <span class="token builtin">int</span>
+	y <span class="token builtin">int</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+		<section id="C.sfVector3f" class="doc-node">
+			<div class="title"><h2>struct C.sfVector3f <a href="#C.sfVector3f">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> C<span class="token punctuation">.</span><span class="token symbol">sfVector3f</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span><span class="token punctuation">:</span>
+	x <span class="token builtin">f32</span>
+	y <span class="token builtin">f32</span>
+	z <span class="token builtin">f32</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+
+						<div class="footer">Powered by vdoc. Generated on: 18 Sep 2023 22:38:35</div>
+					</div>
+					<div class="doc-toc"><ul><li class="open"><a href="#microseconds">fn microseconds</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#milliseconds">fn milliseconds</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#new_clock">fn new_clock</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#seconds">fn seconds</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#sleep">fn sleep</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Clock.copy">type Clock</a>        <ul>
+<li><a href="#Clock.copy">fn copy</a></li>
+<li><a href="#Clock.free">fn free</a></li>
+<li><a href="#Clock.get_elapsed_time">fn get_elapsed_time</a></li>
+<li><a href="#Clock.restart">fn restart</a></li>
+</ul>
+</li>
+<li class="open"><a href="#InputStream">type InputStream</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#InputStreamGetSizeFunc">type InputStreamGetSizeFunc</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#InputStreamReadFunc">type InputStreamReadFunc</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#InputStreamSeekFunc">type InputStreamSeekFunc</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#InputStreamTellFunc">type InputStreamTellFunc</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Mutex">type Mutex</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Thread">type Thread</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Time">type Time</a>        <ul>
+<li><a href="#Time.as_seconds">fn as_seconds</a></li>
+<li><a href="#Time.as_milliseconds">fn as_milliseconds</a></li>
+<li><a href="#Time.as_microseconds">fn as_microseconds</a></li>
+</ul>
+</li>
+<li class="open"><a href="#Vector2f">type Vector2f</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Vector2i">type Vector2i</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Vector2u">type Vector2u</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Vector3f">type Vector3f</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#C.sfTime">struct C.sfTime</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#C.sfVector2f">struct C.sfVector2f</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#C.sfVector2i">struct C.sfVector2i</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#C.sfVector2u">struct C.sfVector2u</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#C.sfVector3f">struct C.sfVector3f</a>        <ul>
+</ul>
+</li>
+</ul></div>
+				</div>
+			</div>
+		</div>
+		<script src="doc.js"></script>
+		<script async src="search_index.js"></script>
+	</body>
+</html>
