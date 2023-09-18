@@ -21,7 +21,7 @@ fn C.sfSensor_getValue(C.sfSensorType) C.sfVector3f
 // sensor_is_available: check if a sensor is available on the underlying platform
 pub fn sensor_is_available(sensor SensorType) bool {
 	unsafe {
-		return C.sfSensor_isAvailable(C.sfSensorType(sensor)) != 0
+		return C.sfSensor_isAvailable(*&C.sfSensorType(&sensor)) != 0
 	}
 }
 
@@ -32,13 +32,13 @@ pub fn sensor_is_available(sensor SensorType) bool {
 // This function does nothing if the sensor is unavailable.
 pub fn sensor_set_enabled(sensor SensorType, enabled bool) {
 	unsafe {
-		C.sfSensor_setEnabled(C.sfSensorType(sensor), int(enabled))
+		C.sfSensor_setEnabled(*&C.sfSensorType(&sensor), int(enabled))
 	}
 }
 
 // sensor_get_value: get the current sensor value
 pub fn sensor_get_value(sensor SensorType) system.Vector3f {
 	unsafe {
-		return system.Vector3f(C.sfSensor_getValue(C.sfSensorType(sensor)))
+		return system.Vector3f(C.sfSensor_getValue(*&C.sfSensorType(&sensor)))
 	}
 }

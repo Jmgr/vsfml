@@ -9,6 +9,6 @@ fn C.sfSleep(C.sfTime)
 // threads, as it doesn't consume any CPU power.
 pub fn sleep(duration Time) {
 	unsafe {
-		C.sfSleep(C.sfTime(duration))
+		C.sfSleep(*&C.sfTime(&duration))
 	}
 }

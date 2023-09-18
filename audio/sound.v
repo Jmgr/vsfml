@@ -31,7 +31,7 @@ fn C.sfSound_getAttenuation(&C.sfSound) f32
 fn C.sfSound_getPlayingOffset(&C.sfSound) C.sfTime
 
 // new_sound: create a new sound
-pub fn new_sound() ?&Sound {
+pub fn new_sound() !&Sound {
 	unsafe {
 		result := &Sound(C.sfSound_create())
 		if voidptr(result) == C.NULL {
@@ -42,7 +42,7 @@ pub fn new_sound() ?&Sound {
 }
 
 // copy: create a new sound by copying an existing one
-pub fn (s &Sound) copy() ?&Sound {
+pub fn (s &Sound) copy() !&Sound {
 	unsafe {
 		result := &Sound(C.sfSound_copy(&C.sfSound(s)))
 		if voidptr(result) == C.NULL {
@@ -102,7 +102,7 @@ pub fn (s &Sound) set_buffer(buffer &SoundBuffer) {
 }
 
 // get_buffer: get the audio buffer attached to a sound
-pub fn (s &Sound) get_buffer() ?&SoundBuffer {
+pub fn (s &Sound) get_buffer() !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSound_getBuffer(&C.sfSound(s)))
 		if voidptr(result) == C.NULL {
@@ -164,7 +164,7 @@ pub fn (s &Sound) set_volume(volume f32) {
 // The default position of a sound is (0, 0, 0).
 pub fn (s &Sound) set_position(position system.Vector3f) {
 	unsafe {
-		C.sfSound_setPosition(&C.sfSound(s), C.sfVector3f(position))
+		C.sfSound_setPosition(&C.sfSound(s), *&C.sfVector3f(&position))
 	}
 }
 
@@ -213,7 +213,7 @@ pub fn (s &Sound) set_attenuation(attenuation f32) {
 // either paused or playing.
 pub fn (s &Sound) set_playing_offset(timeOffset system.Time) {
 	unsafe {
-		C.sfSound_setPlayingOffset(&C.sfSound(s), C.sfTime(timeOffset))
+		C.sfSound_setPlayingOffset(&C.sfSound(s), *&C.sfTime(&timeOffset))
 	}
 }
 

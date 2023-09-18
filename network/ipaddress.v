@@ -5,7 +5,7 @@ import system
 #include <SFML/Network/IpAddress.h>
 
 [typedef]
-struct C.sfIpAddress {
+pub struct C.sfIpAddress {
 pub:
 	address [16]char
 }
@@ -57,9 +57,9 @@ pub fn ipaddress_from_integer(address u32) IpAddress {
 // The returned string is the decimal representation of the
 // IP address (like "192.168.1.56"), even if it was constructed
 // from a host name.
-pub fn (i IpAddress) to_string(string string) {
+pub fn (i IpAddress) to_string(s string) {
 	unsafe {
-		C.sfIpAddress_toString(C.sfIpAddress(i), string.str)
+		C.sfIpAddress_toString(*&C.sfIpAddress(&i), s.str)
 	}
 }
 
@@ -71,7 +71,7 @@ pub fn (i IpAddress) to_string(string string) {
 // back to a IpAddress with FromInteger.
 pub fn (i IpAddress) to_integer() u32 {
 	unsafe {
-		return u32(C.sfIpAddress_toInteger(C.sfIpAddress(i)))
+		return u32(C.sfIpAddress_toInteger(*&C.sfIpAddress(&i)))
 	}
 }
 
@@ -101,6 +101,6 @@ pub fn ipaddress_get_local_address() IpAddress {
 // 0 to deactivate this limit.
 pub fn ipaddress_get_public_address(timeout system.Time) IpAddress {
 	unsafe {
-		return IpAddress(C.sfIpAddress_getPublicAddress(C.sfTime(timeout)))
+		return IpAddress(C.sfIpAddress_getPublicAddress(*&C.sfTime(&timeout)))
 	}
 }

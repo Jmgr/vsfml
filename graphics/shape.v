@@ -29,21 +29,21 @@ fn C.sfShape_getTextureRect(&C.sfShape) C.sfIntRect
 fn C.sfShape_getFillColor(&C.sfShape) C.sfColor
 fn C.sfShape_getOutlineColor(&C.sfShape) C.sfColor
 fn C.sfShape_getOutlineThickness(&C.sfShape) f32
-fn C.sfShape_getPointCount(&C.sfShape) size_t
-fn C.sfShape_getPoint(&C.sfShape, size_t) C.sfVector2f
+fn C.sfShape_getPointCount(&C.sfShape) usize
+fn C.sfShape_getPoint(&C.sfShape, usize) C.sfVector2f
 fn C.sfShape_getLocalBounds(&C.sfShape) C.sfFloatRect
 fn C.sfShape_getGlobalBounds(&C.sfShape) C.sfFloatRect
 fn C.sfShape_update(&C.sfShape)
 
-pub type ShapeGetPointCountCallback = fn (voidptr) size_t // Type of the callback used to get the number of points in a shape
+pub type ShapeGetPointCountCallback = fn (voidptr) usize // Type of the callback used to get the number of points in a shape
 
-pub type ShapeGetPointCallback = fn (size_t, voidptr) C.sfVector2f // Type of the callback used to get a point of a shape
+pub type ShapeGetPointCallback = fn (usize, voidptr) C.sfVector2f // Type of the callback used to get a point of a shape
 
 // new_shape: create a new shape
-pub fn new_shape(params ShapeNewShapeParams) ?&Shape {
+pub fn new_shape(params ShapeNewShapeParams) !&Shape {
 	unsafe {
-		result := &Shape(C.sfShape_create(C.sfShapeGetPointCountCallback(params.get_point_count),
-			C.sfShapeGetPointCallback(params.get_point), voidptr(params.user_data)))
+		result := &Shape(C.sfShape_create(*&C.sfShapeGetPointCountCallback(&params.get_point_count),
+			*&C.sfShapeGetPointCallback(&params.get_point), voidptr(params.user_data)))
 		if voidptr(result) == C.NULL {
 			return error('new_shape failed with get_point_count=$params.get_point_count get_point=$params.get_point')
 		}
@@ -73,7 +73,7 @@ pub fn (s &Shape) free() {
 // The default position of a circle Shape object is (0, 0).
 pub fn (s &Shape) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfShape_setPosition(&C.sfShape(s), C.sfVector2f(position))
+		C.sfShape_setPosition(&C.sfShape(s), *&C.sfVector2f(&position))
 	}
 }
 
@@ -93,7 +93,7 @@ pub fn (s &Shape) set_rotation(angle f32) {
 // The default scale of a circle Shape object is (1, 1).
 pub fn (s &Shape) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfShape_setScale(&C.sfShape(s), C.sfVector2f(scale))
+		C.sfShape_setScale(&C.sfShape(s), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -106,7 +106,7 @@ pub fn (s &Shape) set_scale(scale system.Vector2f) {
 // The default origin of a circle Shape object is (0, 0).
 pub fn (s &Shape) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfShape_setOrigin(&C.sfShape(s), C.sfVector2f(origin))
+		C.sfShape_setOrigin(&C.sfShape(s), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -144,7 +144,7 @@ pub fn (s &Shape) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (s &Shape) move(offset system.Vector2f) {
 	unsafe {
-		C.sfShape_move(&C.sfShape(s), C.sfVector2f(offset))
+		C.sfShape_move(&C.sfShape(s), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -162,7 +162,7 @@ pub fn (s &Shape) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (s &Shape) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfShape_scale(&C.sfShape(s), C.sfVector2f(factors))
+		C.sfShape_scale(&C.sfShape(s), *&C.sfVector2f(&factors))
 	}
 }
 
@@ -199,7 +199,7 @@ pub fn (s &Shape) set_texture(texture &Texture, resetRect bool) {
 // By default, the texture rect covers the entire texture.
 pub fn (s &Shape) set_texture_rect(rect IntRect) {
 	unsafe {
-		C.sfShape_setTextureRect(&C.sfShape(s), C.sfIntRect(rect))
+		C.sfShape_setTextureRect(&C.sfShape(s), *&C.sfIntRect(&rect))
 	}
 }
 
@@ -212,7 +212,7 @@ pub fn (s &Shape) set_texture_rect(rect IntRect) {
 // By default, the shape's fill color is opaque white.
 pub fn (s &Shape) set_fill_color(color Color) {
 	unsafe {
-		C.sfShape_setFillColor(&C.sfShape(s), C.sfColor(color))
+		C.sfShape_setFillColor(&C.sfShape(s), *&C.sfColor(&color))
 	}
 }
 
@@ -221,7 +221,7 @@ pub fn (s &Shape) set_fill_color(color Color) {
 // By default, the shape's outline color is opaque white.
 pub fn (s &Shape) set_outline_color(color Color) {
 	unsafe {
-		C.sfShape_setOutlineColor(&C.sfShape(s), C.sfColor(color))
+		C.sfShape_setOutlineColor(&C.sfShape(s), *&C.sfColor(&color))
 	}
 }
 
@@ -239,7 +239,7 @@ pub fn (s &Shape) set_outline_thickness(thickness f32) {
 // If the shape has no source texture, a NULL pointer is returned.
 // The returned pointer is const, which means that you can't
 // modify the texture when you retrieve it with this function.
-pub fn (s &Shape) get_texture() ?&Texture {
+pub fn (s &Shape) get_texture() !&Texture {
 	unsafe {
 		result := &Texture(C.sfShape_getTexture(&C.sfShape(s)))
 		if voidptr(result) == C.NULL {
@@ -288,7 +288,7 @@ pub fn (s &Shape) get_point_count() u64 {
 // The result is undefined if index is out of the valid range.
 pub fn (s &Shape) get_point(index u64) system.Vector2f {
 	unsafe {
-		return system.Vector2f(C.sfShape_getPoint(&C.sfShape(s), size_t(index)))
+		return system.Vector2f(C.sfShape_getPoint(&C.sfShape(s), usize(index)))
 	}
 }
 

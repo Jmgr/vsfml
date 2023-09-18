@@ -5,17 +5,17 @@ module network
 fn C.sfPacket_create() &C.sfPacket
 fn C.sfPacket_copy(&C.sfPacket) &C.sfPacket
 fn C.sfPacket_destroy(&C.sfPacket)
-fn C.sfPacket_append(&C.sfPacket, voidptr, size_t)
+fn C.sfPacket_append(&C.sfPacket, voidptr, usize)
 fn C.sfPacket_clear(&C.sfPacket)
 fn C.sfPacket_getData(&C.sfPacket) voidptr
-fn C.sfPacket_getDataSize(&C.sfPacket) size_t
+fn C.sfPacket_getDataSize(&C.sfPacket) usize
 fn C.sfPacket_endOfPacket(&C.sfPacket) int
 fn C.sfPacket_canRead(&C.sfPacket) int
 fn C.sfPacket_readUint16(&C.sfPacket) u16
 fn C.sfPacket_readUint32(&C.sfPacket) u32
 fn C.sfPacket_writeBool(&C.sfPacket, int)
 fn C.sfPacket_writeInt8(&C.sfPacket, i8)
-fn C.sfPacket_writeUint8(&C.sfPacket, byte)
+fn C.sfPacket_writeUint8(&C.sfPacket, u8)
 fn C.sfPacket_writeInt16(&C.sfPacket, i16)
 fn C.sfPacket_writeUint16(&C.sfPacket, u16)
 fn C.sfPacket_writeInt32(&C.sfPacket, int)
@@ -26,7 +26,7 @@ fn C.sfPacket_writeString(&C.sfPacket, &char)
 fn C.sfPacket_writeWideString(&C.sfPacket, &i16)
 
 // new_packet: create a new packet
-pub fn new_packet() ?&Packet {
+pub fn new_packet() !&Packet {
 	unsafe {
 		result := &Packet(C.sfPacket_create())
 		if voidptr(result) == C.NULL {
@@ -37,7 +37,7 @@ pub fn new_packet() ?&Packet {
 }
 
 // copy: create a new packet by copying an existing one
-pub fn (p &Packet) copy() ?&Packet {
+pub fn (p &Packet) copy() !&Packet {
 	unsafe {
 		result := &Packet(C.sfPacket_copy(&C.sfPacket(p)))
 		if voidptr(result) == C.NULL {
@@ -58,7 +58,7 @@ pub fn (p &Packet) free() {
 // append: append data to the end of a packet
 pub fn (p &Packet) append(data voidptr, sizeInBytes u64) {
 	unsafe {
-		C.sfPacket_append(&C.sfPacket(p), voidptr(data), size_t(sizeInBytes))
+		C.sfPacket_append(&C.sfPacket(p), voidptr(data), usize(sizeInBytes))
 	}
 }
 
@@ -127,76 +127,76 @@ pub fn (p &Packet) readuint32() u32 {
 // write_bool: functions to insert data into a packet
 pub fn (p &Packet) write_bool(param0 bool) {
 	unsafe {
-		C.sfPacket_writeBool(&C.sfPacket(p), int(param1))
+		C.sfPacket_writeBool(&C.sfPacket(p), int(param0))
 	}
 }
 
 // writeint8
 pub fn (p &Packet) writeint8(param0 i8) {
 	unsafe {
-		C.sfPacket_writeInt8(&C.sfPacket(p), i8(param1))
+		C.sfPacket_writeInt8(&C.sfPacket(p), i8(param0))
 	}
 }
 
 // writeuint8
-pub fn (p &Packet) writeuint8(param0 byte) {
+pub fn (p &Packet) writeuint8(param0 u8) {
 	unsafe {
-		C.sfPacket_writeUint8(&C.sfPacket(p), byte(param1))
+		C.sfPacket_writeUint8(&C.sfPacket(p), u8(param0))
 	}
 }
 
 // writeint16
 pub fn (p &Packet) writeint16(param0 i16) {
 	unsafe {
-		C.sfPacket_writeInt16(&C.sfPacket(p), i16(param1))
+		C.sfPacket_writeInt16(&C.sfPacket(p), i16(param0))
 	}
 }
 
 // writeuint16
 pub fn (p &Packet) writeuint16(param0 u16) {
 	unsafe {
-		C.sfPacket_writeUint16(&C.sfPacket(p), u16(param1))
+		C.sfPacket_writeUint16(&C.sfPacket(p), u16(param0))
 	}
 }
 
 // writeint32
 pub fn (p &Packet) writeint32(param0 int) {
 	unsafe {
-		C.sfPacket_writeInt32(&C.sfPacket(p), int(param1))
+		C.sfPacket_writeInt32(&C.sfPacket(p), int(param0))
 	}
 }
 
 // writeuint32
 pub fn (p &Packet) writeuint32(param0 u32) {
 	unsafe {
-		C.sfPacket_writeUint32(&C.sfPacket(p), u32(param1))
+		C.sfPacket_writeUint32(&C.sfPacket(p), u32(param0))
 	}
 }
 
 // write_float
 pub fn (p &Packet) write_float(param0 f32) {
 	unsafe {
-		C.sfPacket_writeFloat(&C.sfPacket(p), f32(param1))
+		C.sfPacket_writeFloat(&C.sfPacket(p), f32(param0))
 	}
 }
 
 // write_double
 pub fn (p &Packet) write_double(param0 f64) {
 	unsafe {
-		C.sfPacket_writeDouble(&C.sfPacket(p), f64(param1))
+		C.sfPacket_writeDouble(&C.sfPacket(p), f64(param0))
 	}
 }
 
 // write_string
-pub fn (p &Packet) write_string(string string) {
+pub fn (p &Packet) write_string(s string) {
 	unsafe {
-		C.sfPacket_writeString(&C.sfPacket(p), string.str)
+		C.sfPacket_writeString(&C.sfPacket(p), s.str)
 	}
 }
 
 // write_wide_string
-pub fn (p &Packet) write_wide_string(string &i16) {
+pub fn (p &Packet) write_wide_string(ws &i16) {
 	unsafe {
-		C.sfPacket_writeWideString(&C.sfPacket(p), &i16(string))
+		C.sfPacket_writeWideString(&C.sfPacket(p), &i16(ws))
 	}
 }

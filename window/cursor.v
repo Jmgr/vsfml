@@ -43,10 +43,10 @@ fn C.sfCursor_createFromSystem(C.sfCursorType) &C.sfCursor
 fn C.sfCursor_destroy(&C.sfCursor)
 
 // new_cursor_from_pixels: create a cursor with the provided image
-pub fn new_cursor_from_pixels(params CursorNewCursorFromPixelsParams) ?&Cursor {
+pub fn new_cursor_from_pixels(params CursorNewCursorFromPixelsParams) !&Cursor {
 	unsafe {
-		result := &Cursor(C.sfCursor_createFromPixels(&byte(params.pixels), C.sfVector2u(params.size),
-			C.sfVector2u(params.hotspot)))
+		result := &Cursor(C.sfCursor_createFromPixels(&u8(params.pixels), *&C.sfVector2u(&params.size),
+			*&C.sfVector2u(&params.hotspot)))
 		if voidptr(result) == C.NULL {
 			return error('new_cursor_from_pixels failed with size=$params.size hotspot=$params.hotspot')
 		}
@@ -67,9 +67,9 @@ pub:
 // (see CursorType) to know whether a given cursor is
 // expected to load successfully or is not supported by
 // the operating system.
-pub fn new_cursor_from_system(params CursorNewCursorFromSystemParams) ?&Cursor {
+pub fn new_cursor_from_system(params CursorNewCursorFromSystemParams) !&Cursor {
 	unsafe {
-		result := &Cursor(C.sfCursor_createFromSystem(C.sfCursorType(params.cursor_type)))
+		result := &Cursor(C.sfCursor_createFromSystem(*&C.sfCursorType(&params.cursor_type)))
 		if voidptr(result) == C.NULL {
 			return error('new_cursor_from_system failed with cursor_type=$params.cursor_type')
 		}

@@ -32,7 +32,7 @@ pub fn joystick_is_connected(joystick u32) bool {
 // If the joystick is not connected, this function returns false.
 pub fn joystick_has_axis(joystick u32, axis JoystickAxis) bool {
 	unsafe {
-		return C.sfJoystick_hasAxis(u32(joystick), C.sfJoystickAxis(axis)) != 0
+		return C.sfJoystick_hasAxis(u32(joystick), *&C.sfJoystickAxis(&axis)) != 0
 	}
 }
 
@@ -48,7 +48,7 @@ pub fn joystick_is_button_pressed(joystick u32, button u32) bool {
 // If the joystick is not connected, this function returns 0.
 pub fn joystick_get_axis_position(joystick u32, axis JoystickAxis) f32 {
 	unsafe {
-		return f32(C.sfJoystick_getAxisPosition(u32(joystick), C.sfJoystickAxis(axis)))
+		return f32(C.sfJoystick_getAxisPosition(u32(joystick), *&C.sfJoystickAxis(&axis)))
 	}
 }
 

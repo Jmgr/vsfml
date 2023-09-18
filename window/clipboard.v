@@ -21,7 +21,7 @@ pub fn clipboard_get_string() string {
 // This function returns the content of the clipboard
 // as a string. If the clipboard does not contain string
 // it returns an empty string.
-pub fn clipboard_get_unicode_string() ?&u32 {
+pub fn clipboard_get_unicode_string() !&u32 {
 	unsafe {
 		result := &u32(C.sfClipboard_getUnicodeString())
 		if voidptr(result) == C.NULL {

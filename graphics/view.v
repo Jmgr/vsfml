@@ -23,7 +23,7 @@ fn C.sfView_zoom(&C.sfView, f32)
 
 // new_view: create a default view
 // This function creates a default view of (0, 0, 1000, 1000)
-pub fn new_view() ?&View {
+pub fn new_view() !&View {
 	unsafe {
 		result := &View(C.sfView_create())
 		if voidptr(result) == C.NULL {
@@ -34,9 +34,9 @@ pub fn new_view() ?&View {
 }
 
 // new_view_from_rect: construct a view from a rectangle
-pub fn new_view_from_rect(params ViewNewViewFromRectParams) ?&View {
+pub fn new_view_from_rect(params ViewNewViewFromRectParams) !&View {
 	unsafe {
-		result := &View(C.sfView_createFromRect(C.sfFloatRect(params.rectangle)))
+		result := &View(C.sfView_createFromRect(*&C.sfFloatRect(&params.rectangle)))
 		if voidptr(result) == C.NULL {
 			return error('new_view_from_rect failed with rectangle=$params.rectangle')
 		}
@@ -51,7 +51,7 @@ pub:
 }
 
 // copy: copy an existing view
-pub fn (v &View) copy() ?&View {
+pub fn (v &View) copy() !&View {
 	unsafe {
 		result := &View(C.sfView_copy(&C.sfView(v)))
 		if voidptr(result) == C.NULL {
@@ -72,14 +72,14 @@ pub fn (v &View) free() {
 // set_center: set the center of a view
 pub fn (v &View) set_center(center system.Vector2f) {
 	unsafe {
-		C.sfView_setCenter(&C.sfView(v), C.sfVector2f(center))
+		C.sfView_setCenter(&C.sfView(v), *&C.sfVector2f(&center))
 	}
 }
 
 // set_size: set the size of a view
 pub fn (v &View) set_size(size system.Vector2f) {
 	unsafe {
-		C.sfView_setSize(&C.sfView(v), C.sfVector2f(size))
+		C.sfView_setSize(&C.sfView(v), *&C.sfVector2f(&size))
 	}
 }
 
@@ -100,7 +100,7 @@ pub fn (v &View) set_rotation(angle f32) {
 // By default, a view has a viewport which covers the entire target.
 pub fn (v &View) set_viewport(viewport FloatRect) {
 	unsafe {
-		C.sfView_setViewport(&C.sfView(v), C.sfFloatRect(viewport))
+		C.sfView_setViewport(&C.sfView(v), *&C.sfFloatRect(&viewport))
 	}
 }
 
@@ -108,7 +108,7 @@ pub fn (v &View) set_viewport(viewport FloatRect) {
 // Note that this function resets the rotation angle to 0.
 pub fn (v &View) reset(rectangle FloatRect) {
 	unsafe {
-		C.sfView_reset(&C.sfView(v), C.sfFloatRect(rectangle))
+		C.sfView_reset(&C.sfView(v), *&C.sfFloatRect(&rectangle))
 	}
 }
 
@@ -143,7 +143,7 @@ pub fn (v &View) get_viewport() FloatRect {
 // move: move a view relatively to its current position
 pub fn (v &View) move(offset system.Vector2f) {
 	unsafe {
-		C.sfView_move(&C.sfView(v), C.sfVector2f(offset))
+		C.sfView_move(&C.sfView(v), *&C.sfVector2f(&offset))
 	}
 }
 

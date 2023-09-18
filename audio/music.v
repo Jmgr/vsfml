@@ -15,7 +15,7 @@ pub:
 pub type TimeSpan = C.sfTimeSpan
 
 fn C.sfMusic_createFromFile(&char) &C.sfMusic
-fn C.sfMusic_createFromMemory(voidptr, size_t) &C.sfMusic
+fn C.sfMusic_createFromMemory(voidptr, usize) &C.sfMusic
 fn C.sfMusic_createFromStream(&C.sfInputStream) &C.sfMusic
 fn C.sfMusic_destroy(&C.sfMusic)
 fn C.sfMusic_setLoop(&C.sfMusic, int)
@@ -48,7 +48,7 @@ fn C.sfMusic_getAttenuation(&C.sfMusic) f32
 // Here is a complete list of all the supported audio formats:
 // ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 // w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-pub fn new_music_from_file(params MusicNewMusicFromFileParams) ?&Music {
+pub fn new_music_from_file(params MusicNewMusicFromFileParams) !&Music {
 	unsafe {
 		result := &Music(C.sfMusic_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
@@ -70,9 +70,9 @@ pub:
 // Here is a complete list of all the supported audio formats:
 // ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 // w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-pub fn new_music_from_memory(params MusicNewMusicFromMemoryParams) ?&Music {
+pub fn new_music_from_memory(params MusicNewMusicFromMemoryParams) !&Music {
 	unsafe {
-		result := &Music(C.sfMusic_createFromMemory(voidptr(params.data), size_t(params.size_in_bytes)))
+		result := &Music(C.sfMusic_createFromMemory(voidptr(params.data), usize(params.size_in_bytes)))
 		if voidptr(result) == C.NULL {
 			return error('new_music_from_memory failed with size_in_bytes=$params.size_in_bytes')
 		}
@@ -93,7 +93,7 @@ pub:
 // Here is a complete list of all the supported audio formats:
 // ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 // w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-pub fn new_music_from_stream(params MusicNewMusicFromStreamParams) ?&Music {
+pub fn new_music_from_stream(params MusicNewMusicFromStreamParams) !&Music {
 	unsafe {
 		result := &Music(C.sfMusic_createFromStream(&C.sfInputStream(params.stream)))
 		if voidptr(result) == C.NULL {
@@ -160,7 +160,7 @@ pub fn (m &Music) get_loop_points() TimeSpan {
 // without affecting the current playing offset.
 pub fn (m &Music) set_loop_points(timePoints TimeSpan) {
 	unsafe {
-		C.sfMusic_setLoopPoints(&C.sfMusic(m), C.sfTimeSpan(timePoints))
+		C.sfMusic_setLoopPoints(&C.sfMusic(m), *&C.sfTimeSpan(&timePoints))
 	}
 }
 
@@ -236,7 +236,7 @@ pub fn (m &Music) set_volume(volume f32) {
 // The default position of a music is (0, 0, 0).
 pub fn (m &Music) set_position(position system.Vector3f) {
 	unsafe {
-		C.sfMusic_setPosition(&C.sfMusic(m), C.sfVector3f(position))
+		C.sfMusic_setPosition(&C.sfMusic(m), *&C.sfVector3f(&position))
 	}
 }
 
@@ -285,7 +285,7 @@ pub fn (m &Music) set_attenuation(attenuation f32) {
 // either paused or playing.
 pub fn (m &Music) set_playing_offset(timeOffset system.Time) {
 	unsafe {
-		C.sfMusic_setPlayingOffset(&C.sfMusic(m), C.sfTime(timeOffset))
+		C.sfMusic_setPlayingOffset(&C.sfMusic(m), *&C.sfTime(&timeOffset))
 	}
 }
 

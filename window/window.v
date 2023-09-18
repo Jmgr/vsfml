@@ -5,7 +5,7 @@ import system
 #include <SFML/Window/Window.h>
 
 [typedef]
-struct C.sfContextSettings {
+pub struct C.sfContextSettings {
 pub:
 	depthBits         int
 	stencilBits       int
@@ -65,9 +65,9 @@ fn C.sfWindow_getSystemHandle(&C.sfWindow) C.sfWindowHandle
 // The fourth parameter is a pointer to a structure specifying
 // advanced OpenGL context settings such as antialiasing,
 // depth-buffer bits, etc.
-pub fn new_window(params WindowNewWindowParams) ?&Window {
+pub fn new_window(params WindowNewWindowParams) !&Window {
 	unsafe {
-		result := &Window(C.sfWindow_create(C.sfVideoMode(params.mode), params.title.str,
+		result := &Window(C.sfWindow_create(*&C.sfVideoMode(&params.mode), params.title.str,
 			u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
 			return error('new_window failed with mode=$params.mode title=$params.title style=$params.style')
@@ -94,9 +94,9 @@ pub:
 // The fourth parameter is a pointer to a structure specifying
 // advanced OpenGL context settings such as antialiasing,
 // depth-buffer bits, etc.
-pub fn new_window_unicode(params WindowNewWindowUnicodeParams) ?&Window {
+pub fn new_window_unicode(params WindowNewWindowUnicodeParams) !&Window {
 	unsafe {
-		result := &Window(C.sfWindow_createUnicode(C.sfVideoMode(params.mode), &u32(params.title),
+		result := &Window(C.sfWindow_createUnicode(*&C.sfVideoMode(&params.mode), &u32(params.title),
 			u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
 			return error('new_window_unicode failed with mode=$params.mode style=$params.style')
@@ -120,9 +120,9 @@ pub:
 // The second parameter is a pointer to a structure specifying
 // advanced OpenGL context settings such as antialiasing,
 // depth-buffer bits, etc.
-pub fn new_window_from_handle(params WindowNewWindowFromHandleParams) ?&Window {
+pub fn new_window_from_handle(params WindowNewWindowFromHandleParams) !&Window {
 	unsafe {
-		result := &Window(C.sfWindow_createFromHandle(C.sfWindowHandle(params.handle),
+		result := &Window(C.sfWindow_createFromHandle(*&C.sfWindowHandle(&params.handle),
 			&C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
 			return error('new_window_from_handle failed with handle=$params.handle')
@@ -206,7 +206,7 @@ pub fn (w &Window) get_position() system.Vector2i {
 // the handle of a child window/control).
 pub fn (w &Window) set_position(position system.Vector2i) {
 	unsafe {
-		C.sfWindow_setPosition(&C.sfWindow(w), C.sfVector2i(position))
+		C.sfWindow_setPosition(&C.sfWindow(w), *&C.sfVector2i(&position))
 	}
 }
 
@@ -222,7 +222,7 @@ pub fn (w &Window) get_size() system.Vector2u {
 // set_size: change the size of the rendering region of a window
 pub fn (w &Window) set_size(size system.Vector2u) {
 	unsafe {
-		C.sfWindow_setSize(&C.sfWindow(w), C.sfVector2u(size))
+		C.sfWindow_setSize(&C.sfWindow(w), *&C.sfVector2u(&size))
 	}
 }
 

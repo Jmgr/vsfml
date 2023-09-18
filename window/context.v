@@ -10,7 +10,7 @@ fn C.sfContext_getActiveContextId() u64
 
 // new_context: create a new context
 // This function activates the new context.
-pub fn new_context() ?&Context {
+pub fn new_context() !&Context {
 	unsafe {
 		result := &Context(C.sfContext_create())
 		if voidptr(result) == C.NULL {

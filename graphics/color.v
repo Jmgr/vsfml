@@ -46,27 +46,27 @@ pub fn color_from_integer(color u32) Color {
 // to_integer: convert a color to a 32-bit unsigned integer
 pub fn (c Color) to_integer() u32 {
 	unsafe {
-		return u32(C.sfColor_toInteger(C.sfColor(c)))
+		return u32(C.sfColor_toInteger(*&C.sfColor(&c)))
 	}
 }
 
 // add: add two colors
 pub fn (c Color) add(color2 Color) Color {
 	unsafe {
-		return Color(C.sfColor_add(C.sfColor(c), C.sfColor(color2)))
+		return Color(C.sfColor_add(*&C.sfColor(&c), *&C.sfColor(&color2)))
 	}
 }
 
 // subtract: subtract two colors
 pub fn (c Color) subtract(color2 Color) Color {
 	unsafe {
-		return Color(C.sfColor_subtract(C.sfColor(c), C.sfColor(color2)))
+		return Color(C.sfColor_subtract(*&C.sfColor(&c), *&C.sfColor(&color2)))
 	}
 }
 
 // modulate: modulate two colors
 pub fn (c Color) modulate(color2 Color) Color {
 	unsafe {
-		return Color(C.sfColor_modulate(C.sfColor(c), C.sfColor(color2)))
+		return Color(C.sfColor_modulate(*&C.sfColor(&c), *&C.sfColor(&color2)))
 	}
 }

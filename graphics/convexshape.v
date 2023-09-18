@@ -30,15 +30,15 @@ fn C.sfConvexShape_getTextureRect(&C.sfConvexShape) C.sfIntRect
 fn C.sfConvexShape_getFillColor(&C.sfConvexShape) C.sfColor
 fn C.sfConvexShape_getOutlineColor(&C.sfConvexShape) C.sfColor
 fn C.sfConvexShape_getOutlineThickness(&C.sfConvexShape) f32
-fn C.sfConvexShape_getPointCount(&C.sfConvexShape) size_t
-fn C.sfConvexShape_getPoint(&C.sfConvexShape, size_t) C.sfVector2f
-fn C.sfConvexShape_setPointCount(&C.sfConvexShape, size_t)
-fn C.sfConvexShape_setPoint(&C.sfConvexShape, size_t, C.sfVector2f)
+fn C.sfConvexShape_getPointCount(&C.sfConvexShape) usize
+fn C.sfConvexShape_getPoint(&C.sfConvexShape, usize) C.sfVector2f
+fn C.sfConvexShape_setPointCount(&C.sfConvexShape, usize)
+fn C.sfConvexShape_setPoint(&C.sfConvexShape, usize, C.sfVector2f)
 fn C.sfConvexShape_getLocalBounds(&C.sfConvexShape) C.sfFloatRect
 fn C.sfConvexShape_getGlobalBounds(&C.sfConvexShape) C.sfFloatRect
 
 // new_convex_shape: create a new convex shape
-pub fn new_convex_shape() ?&ConvexShape {
+pub fn new_convex_shape() !&ConvexShape {
 	unsafe {
 		result := &ConvexShape(C.sfConvexShape_create())
 		if voidptr(result) == C.NULL {
@@ -49,7 +49,7 @@ pub fn new_convex_shape() ?&ConvexShape {
 }
 
 // copy: copy an existing convex shape
-pub fn (c &ConvexShape) copy() ?&ConvexShape {
+pub fn (c &ConvexShape) copy() !&ConvexShape {
 	unsafe {
 		result := &ConvexShape(C.sfConvexShape_copy(&C.sfConvexShape(c)))
 		if voidptr(result) == C.NULL {
@@ -73,7 +73,7 @@ pub fn (c &ConvexShape) free() {
 // The default position of a circle Shape object is (0, 0).
 pub fn (c &ConvexShape) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfConvexShape_setPosition(&C.sfConvexShape(c), C.sfVector2f(position))
+		C.sfConvexShape_setPosition(&C.sfConvexShape(c), *&C.sfVector2f(&position))
 	}
 }
 
@@ -93,7 +93,7 @@ pub fn (c &ConvexShape) set_rotation(angle f32) {
 // The default scale of a circle Shape object is (1, 1).
 pub fn (c &ConvexShape) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfConvexShape_setScale(&C.sfConvexShape(c), C.sfVector2f(scale))
+		C.sfConvexShape_setScale(&C.sfConvexShape(c), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -106,7 +106,7 @@ pub fn (c &ConvexShape) set_scale(scale system.Vector2f) {
 // The default origin of a circle Shape object is (0, 0).
 pub fn (c &ConvexShape) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfConvexShape_setOrigin(&C.sfConvexShape(c), C.sfVector2f(origin))
+		C.sfConvexShape_setOrigin(&C.sfConvexShape(c), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -144,7 +144,7 @@ pub fn (c &ConvexShape) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (c &ConvexShape) move(offset system.Vector2f) {
 	unsafe {
-		C.sfConvexShape_move(&C.sfConvexShape(c), C.sfVector2f(offset))
+		C.sfConvexShape_move(&C.sfConvexShape(c), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -162,7 +162,7 @@ pub fn (c &ConvexShape) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (c &ConvexShape) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfConvexShape_scale(&C.sfConvexShape(c), C.sfVector2f(factors))
+		C.sfConvexShape_scale(&C.sfConvexShape(c), *&C.sfVector2f(&factors))
 	}
 }
 
@@ -199,7 +199,7 @@ pub fn (c &ConvexShape) set_texture(texture &Texture, resetRect bool) {
 // By default, the texture rect covers the entire texture.
 pub fn (c &ConvexShape) set_texture_rect(rect IntRect) {
 	unsafe {
-		C.sfConvexShape_setTextureRect(&C.sfConvexShape(c), C.sfIntRect(rect))
+		C.sfConvexShape_setTextureRect(&C.sfConvexShape(c), *&C.sfIntRect(&rect))
 	}
 }
 
@@ -212,7 +212,7 @@ pub fn (c &ConvexShape) set_texture_rect(rect IntRect) {
 // By default, the shape's fill color is opaque white.
 pub fn (c &ConvexShape) set_fill_color(color Color) {
 	unsafe {
-		C.sfConvexShape_setFillColor(&C.sfConvexShape(c), C.sfColor(color))
+		C.sfConvexShape_setFillColor(&C.sfConvexShape(c), *&C.sfColor(&color))
 	}
 }
 
@@ -221,7 +221,7 @@ pub fn (c &ConvexShape) set_fill_color(color Color) {
 // By default, the shape's outline color is opaque white.
 pub fn (c &ConvexShape) set_outline_color(color Color) {
 	unsafe {
-		C.sfConvexShape_setOutlineColor(&C.sfConvexShape(c), C.sfColor(color))
+		C.sfConvexShape_setOutlineColor(&C.sfConvexShape(c), *&C.sfColor(&color))
 	}
 }
 
@@ -239,7 +239,7 @@ pub fn (c &ConvexShape) set_outline_thickness(thickness f32) {
 // If the shape has no source texture, a NULL pointer is returned.
 // The returned pointer is const, which means that you can't
 // modify the texture when you retrieve it with this function.
-pub fn (c &ConvexShape) get_texture() ?&Texture {
+pub fn (c &ConvexShape) get_texture() !&Texture {
 	unsafe {
 		result := &Texture(C.sfConvexShape_getTexture(&C.sfConvexShape(c)))
 		if voidptr(result) == C.NULL {
@@ -288,14 +288,14 @@ pub fn (c &ConvexShape) get_point_count() u64 {
 // The result is undefined if index is out of the valid range.
 pub fn (c &ConvexShape) get_point(index u64) system.Vector2f {
 	unsafe {
-		return system.Vector2f(C.sfConvexShape_getPoint(&C.sfConvexShape(c), size_t(index)))
+		return system.Vector2f(C.sfConvexShape_getPoint(&C.sfConvexShape(c), usize(index)))
 	}
 }
 
 // set_point_count: set the number of points of a convex shap
 pub fn (c &ConvexShape) set_point_count(count u64) {
 	unsafe {
-		C.sfConvexShape_setPointCount(&C.sfConvexShape(c), size_t(count))
+		C.sfConvexShape_setPointCount(&C.sfConvexShape(c), usize(count))
 	}
 }
 
@@ -307,7 +307,7 @@ pub fn (c &ConvexShape) set_point_count(count u64) {
 // of the valid range.
 pub fn (c &ConvexShape) set_point(index u64, point system.Vector2f) {
 	unsafe {
-		C.sfConvexShape_setPoint(&C.sfConvexShape(c), size_t(index), C.sfVector2f(point))
+		C.sfConvexShape_setPoint(&C.sfConvexShape(c), usize(index), *&C.sfVector2f(&point))
 	}
 }
 

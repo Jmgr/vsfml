@@ -11,7 +11,7 @@ fn C.sfSoundBufferRecorder_setDevice(&C.sfSoundBufferRecorder, &char) int
 fn C.sfSoundBufferRecorder_getDevice(&C.sfSoundBufferRecorder) &char
 
 // new_sound_buffer_recorder: create a new sound buffer recorder
-pub fn new_sound_buffer_recorder() ?&SoundBufferRecorder {
+pub fn new_sound_buffer_recorder() !&SoundBufferRecorder {
 	unsafe {
 		result := &SoundBufferRecorder(C.sfSoundBufferRecorder_create())
 		if voidptr(result) == C.NULL {
@@ -54,7 +54,7 @@ pub fn (s &SoundBufferRecorder) stop() {
 // This function provides a read-only access to the internal
 // sound buffer, but it can be copied if you need to
 // make any modification to it.
-pub fn (s &SoundBufferRecorder) get_buffer() ?&SoundBuffer {
+pub fn (s &SoundBufferRecorder) get_buffer() !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBufferRecorder_getBuffer(&C.sfSoundBufferRecorder(s)))
 		if voidptr(result) == C.NULL {
