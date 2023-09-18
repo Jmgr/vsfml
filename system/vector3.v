@@ -3,7 +3,7 @@ module system
 #include <SFML/System/Vector3.h>
 
 [typedef]
-struct C.sfVector3f {
+pub struct C.sfVector3f {
 pub:
 	x f32
 	y f32

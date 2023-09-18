@@ -5,17 +5,17 @@ module graphics
 fn C.sfVertexArray_create() &C.sfVertexArray
 fn C.sfVertexArray_copy(&C.sfVertexArray) &C.sfVertexArray
 fn C.sfVertexArray_destroy(&C.sfVertexArray)
-fn C.sfVertexArray_getVertexCount(&C.sfVertexArray) size_t
-fn C.sfVertexArray_getVertex(&C.sfVertexArray, size_t) &C.sfVertex
+fn C.sfVertexArray_getVertexCount(&C.sfVertexArray) usize
+fn C.sfVertexArray_getVertex(&C.sfVertexArray, usize) &C.sfVertex
 fn C.sfVertexArray_clear(&C.sfVertexArray)
-fn C.sfVertexArray_resize(&C.sfVertexArray, size_t)
+fn C.sfVertexArray_resize(&C.sfVertexArray, usize)
 fn C.sfVertexArray_append(&C.sfVertexArray, C.sfVertex)
 fn C.sfVertexArray_setPrimitiveType(&C.sfVertexArray, C.sfPrimitiveType)
 fn C.sfVertexArray_getPrimitiveType(&C.sfVertexArray) C.sfPrimitiveType
 fn C.sfVertexArray_getBounds(&C.sfVertexArray) C.sfFloatRect
 
 // new_vertex_array: create a new vertex array
-pub fn new_vertex_array() ?&VertexArray {
+pub fn new_vertex_array() !&VertexArray {
 	unsafe {
 		result := &VertexArray(C.sfVertexArray_create())
 		if voidptr(result) == C.NULL {
@@ -26,7 +26,7 @@ pub fn new_vertex_array() ?&VertexArray {
 }
 
 // copy: copy an existing vertex array
-pub fn (v &VertexArray) copy() ?&VertexArray {
+pub fn (v &VertexArray) copy() !&VertexArray {
 	unsafe {
 		result := &VertexArray(C.sfVertexArray_copy(&C.sfVertexArray(v)))
 		if voidptr(result) == C.NULL {
@@ -55,9 +55,9 @@ pub fn (v &VertexArray) get_vertex_count() u64 {
 // This function doesn't check index, it must be in range
 // [0, vertex count - 1]. The behaviour is undefined
 // otherwise.
-pub fn (v &VertexArray) get_vertex(index u64) ?&Vertex {
+pub fn (v &VertexArray) get_vertex(index u64) !&Vertex {
 	unsafe {
-		result := &Vertex(C.sfVertexArray_getVertex(&C.sfVertexArray(v), size_t(index)))
+		result := &Vertex(C.sfVertexArray_getVertex(&C.sfVertexArray(v), usize(index)))
 		if voidptr(result) == C.NULL {
 			return error('get_vertex failed with index=$index')
 		}
@@ -84,14 +84,14 @@ pub fn (v &VertexArray) clear() {
 // are removed from the array.
 pub fn (v &VertexArray) resize(vertexCount u64) {
 	unsafe {
-		C.sfVertexArray_resize(&C.sfVertexArray(v), size_t(vertexCount))
+		C.sfVertexArray_resize(&C.sfVertexArray(v), usize(vertexCount))
 	}
 }
 
 // append: add a vertex to a vertex array array
 pub fn (v &VertexArray) append(vertex Vertex) {
 	unsafe {
-		C.sfVertexArray_append(&C.sfVertexArray(v), C.sfVertex(vertex))
+		C.sfVertexArray_append(&C.sfVertexArray(v), *&C.sfVertex(&vertex))
 	}
 }
 
@@ -100,7 +100,7 @@ pub fn (v &VertexArray) append(vertex Vertex) {
 // when it's time to draw them:
 pub fn (v &VertexArray) set_primitive_type(primitiveType PrimitiveType) {
 	unsafe {
-		C.sfVertexArray_setPrimitiveType(&C.sfVertexArray(v), C.sfPrimitiveType(primitiveType))
+		C.sfVertexArray_setPrimitiveType(&C.sfVertexArray(v), *&C.sfPrimitiveType(&primitiveType))
 	}
 }
 

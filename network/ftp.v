@@ -62,8 +62,8 @@ fn C.sfFtpListingResponse_destroy(&C.sfFtpListingResponse)
 fn C.sfFtpListingResponse_isOk(&C.sfFtpListingResponse) int
 fn C.sfFtpListingResponse_getStatus(&C.sfFtpListingResponse) C.sfFtpStatus
 fn C.sfFtpListingResponse_getMessage(&C.sfFtpListingResponse) &char
-fn C.sfFtpListingResponse_getCount(&C.sfFtpListingResponse) size_t
-fn C.sfFtpListingResponse_getName(&C.sfFtpListingResponse, size_t) &char
+fn C.sfFtpListingResponse_getCount(&C.sfFtpListingResponse) usize
+fn C.sfFtpListingResponse_getName(&C.sfFtpListingResponse, usize) &char
 fn C.sfFtpDirectoryResponse_destroy(&C.sfFtpDirectoryResponse)
 fn C.sfFtpDirectoryResponse_isOk(&C.sfFtpDirectoryResponse) int
 fn C.sfFtpDirectoryResponse_getStatus(&C.sfFtpDirectoryResponse) C.sfFtpStatus
@@ -88,7 +88,7 @@ fn C.sfFtp_createDirectory(&C.sfFtp, &char) &C.sfFtpResponse
 fn C.sfFtp_deleteDirectory(&C.sfFtp, &char) &C.sfFtpResponse
 fn C.sfFtp_renameFile(&C.sfFtp, &char, &char) &C.sfFtpResponse
 fn C.sfFtp_deleteFile(&C.sfFtp, &char) &C.sfFtpResponse
-fn C.sfFtp_download(&C.sfFtp, &char, &char, C.sfFtpTransferMode) &C.sfFtpResponse
+fn C.sfFtp_download(&C.sfFtp, &char, &char, C.sf<FtpTransferMode) &C.sfFtpResponse
 fn C.sfFtp_upload(&C.sfFtp, &char, &char, C.sfFtpTransferMode, int) &C.sfFtpResponse
 fn C.sfFtp_sendCommand(&C.sfFtp, &char, &char) &C.sfFtpResponse
 
@@ -134,7 +134,7 @@ pub fn (f &FtpListingResponse) get_count() u64 {
 pub fn (f &FtpListingResponse) get_name(index u64) string {
 	unsafe {
 		return cstring_to_vstring(C.sfFtpListingResponse_getName(&C.sfFtpListingResponse(f),
-			size_t(index)))
+			usize(index)))
 	}
 }
 
@@ -208,7 +208,7 @@ pub fn (f &FtpResponse) get_message() string {
 }
 
 // new_ftp: create a new Ftp object
-pub fn new_ftp() ?&Ftp {
+pub fn new_ftp() !&Ftp {
 	unsafe {
 		result := &Ftp(C.sfFtp_create())
 		if voidptr(result) == C.NULL {
@@ -235,10 +235,10 @@ pub fn (f &Ftp) free() {
 // reachable. To avoid blocking your application for too long,
 // you can use a timeout. Using 0 means that the
 // system timeout will be used (which is usually pretty long).
-pub fn (f &Ftp) connect(params FtpConnectParams) ?&FtpResponse {
+pub fn (f &Ftp) connect(params FtpConnectParams) !&FtpResponse {
 	unsafe {
-		result := &FtpResponse(C.sfFtp_connect(&C.sfFtp(f), C.sfIpAddress(params.server),
-			u16(params.port), C.sfTime(params.timeout)))
+		result := &FtpResponse(C.sfFtp_connect(&C.sfFtp(f), *&C.sfIpAddress(&params.server),
+			u16(params.port), *&C.sfTime(&params.timeout)))
 		if voidptr(result) == C.NULL {
 			return error('connect failed with server=$params.server port=$params.port timeout=$params.timeout')
 		}
@@ -257,7 +257,7 @@ pub:
 // login_anonymous: log in using an anonymous account
 // Logging in is mandatory after connecting to the server.
 // Users that are not logged in cannot perform any operation.
-pub fn (f &Ftp) login_anonymous() ?&FtpResponse {
+pub fn (f &Ftp) login_anonymous() !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_loginAnonymous(&C.sfFtp(f)))
 		if voidptr(result) == C.NULL {
@@ -270,7 +270,7 @@ pub fn (f &Ftp) login_anonymous() ?&FtpResponse {
 // login: log in using a username and a password
 // Logging in is mandatory after connecting to the server.
 // Users that are not logged in cannot perform any operation.
-pub fn (f &Ftp) login(name string, password string) ?&FtpResponse {
+pub fn (f &Ftp) login(name string, password string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_login(&C.sfFtp(f), name.str, password.str))
 		if voidptr(result) == C.NULL {
@@ -281,7 +281,7 @@ pub fn (f &Ftp) login(name string, password string) ?&FtpResponse {
 }
 
 // disconnect: close the connection with the server
-pub fn (f &Ftp) disconnect() ?&FtpResponse {
+pub fn (f &Ftp) disconnect() !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_disconnect(&C.sfFtp(f)))
 		if voidptr(result) == C.NULL {
@@ -294,7 +294,7 @@ pub fn (f &Ftp) disconnect() ?&FtpResponse {
 // keep_alive: send a null command to keep the connection alive
 // This command is useful because the server may close the
 // connection automatically if no command is sent.
-pub fn (f &Ftp) keep_alive() ?&FtpResponse {
+pub fn (f &Ftp) keep_alive() !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_keepAlive(&C.sfFtp(f)))
 		if voidptr(result) == C.NULL {
@@ -307,7 +307,7 @@ pub fn (f &Ftp) keep_alive() ?&FtpResponse {
 // get_working_directory: get the current working directory
 // The working directory is the root path for subsequent
 // operations involving directories and/or filenames.
-pub fn (f &Ftp) get_working_directory() ?&FtpDirectoryResponse {
+pub fn (f &Ftp) get_working_directory() !&FtpDirectoryResponse {
 	unsafe {
 		result := &FtpDirectoryResponse(C.sfFtp_getWorkingDirectory(&C.sfFtp(f)))
 		if voidptr(result) == C.NULL {
@@ -322,7 +322,7 @@ pub fn (f &Ftp) get_working_directory() ?&FtpDirectoryResponse {
 // contained in the given directory. It is not recursive.
 // The directory parameter is relative to the current
 // working directory.
-pub fn (f &Ftp) get_directory_listing(directory string) ?&FtpListingResponse {
+pub fn (f &Ftp) get_directory_listing(directory string) !&FtpListingResponse {
 	unsafe {
 		result := &FtpListingResponse(C.sfFtp_getDirectoryListing(&C.sfFtp(f), directory.str))
 		if voidptr(result) == C.NULL {
@@ -334,7 +334,7 @@ pub fn (f &Ftp) get_directory_listing(directory string) ?&FtpListingResponse {
 
 // change_directory: change the current working directory
 // The new directory must be relative to the current one.
-pub fn (f &Ftp) change_directory(directory string) ?&FtpResponse {
+pub fn (f &Ftp) change_directory(directory string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_changeDirectory(&C.sfFtp(f), directory.str))
 		if voidptr(result) == C.NULL {
@@ -345,7 +345,7 @@ pub fn (f &Ftp) change_directory(directory string) ?&FtpResponse {
 }
 
 // parent_directory: go to the parent directory of the current one
-pub fn (f &Ftp) parent_directory() ?&FtpResponse {
+pub fn (f &Ftp) parent_directory() !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_parentDirectory(&C.sfFtp(f)))
 		if voidptr(result) == C.NULL {
@@ -358,7 +358,7 @@ pub fn (f &Ftp) parent_directory() ?&FtpResponse {
 // new_ftp_response_directory: create a new directory
 // The new directory is created as a child of the current
 // working directory.
-pub fn new_ftp_response_directory(params FtpNewFtpResponseDirectoryParams) ?&FtpResponse {
+pub fn new_ftp_response_directory(params FtpNewFtpResponseDirectoryParams) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_createDirectory(&C.sfFtp(params.ftp), params.name.str))
 		if voidptr(result) == C.NULL {
@@ -380,7 +380,7 @@ pub:
 // current working directory.
 // Use this function with caution, the directory will
 // be removed permanently!
-pub fn (f &Ftp) delete_directory(name string) ?&FtpResponse {
+pub fn (f &Ftp) delete_directory(name string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_deleteDirectory(&C.sfFtp(f), name.str))
 		if voidptr(result) == C.NULL {
@@ -393,7 +393,7 @@ pub fn (f &Ftp) delete_directory(name string) ?&FtpResponse {
 // rename_file: rename an existing file
 // The filenames must be relative to the current working
 // directory.
-pub fn (f &Ftp) rename_file(file string, newName string) ?&FtpResponse {
+pub fn (f &Ftp) rename_file(file string, newName string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_renameFile(&C.sfFtp(f), file.str, newName.str))
 		if voidptr(result) == C.NULL {
@@ -408,7 +408,7 @@ pub fn (f &Ftp) rename_file(file string, newName string) ?&FtpResponse {
 // directory.
 // Use this function with caution, the file will be
 // removed permanently!
-pub fn (f &Ftp) delete_file(name string) ?&FtpResponse {
+pub fn (f &Ftp) delete_file(name string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_deleteFile(&C.sfFtp(f), name.str))
 		if voidptr(result) == C.NULL {
@@ -423,10 +423,10 @@ pub fn (f &Ftp) delete_file(name string) ?&FtpResponse {
 // current working directory of the server, and the local
 // destination path is relative to the current directory
 // of your application.
-pub fn (f &Ftp) download(params FtpDownloadParams) ?&FtpResponse {
+pub fn (f &Ftp) download(params FtpDownloadParams) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_download(&C.sfFtp(f), params.remote_file.str,
-			params.local_path.str, C.sfFtpTransferMode(params.mode)))
+			params.local_path.str, *&C.sfFtpTransferMode(&params.mode)))
 		if voidptr(result) == C.NULL {
 			return error('download failed with remote_file=$params.remote_file local_path=$params.local_path mode=$params.mode')
 		}
@@ -447,10 +447,10 @@ pub:
 // working directory of your application, and the
 // remote path is relative to the current directory of the
 // FTP server.
-pub fn (f &Ftp) upload(params FtpUploadParams) ?&FtpResponse {
+pub fn (f &Ftp) upload(params FtpUploadParams) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_upload(&C.sfFtp(f), params.local_file.str, params.remote_path.str,
-			C.sfFtpTransferMode(params.mode), int(params.append)))
+			*&C.sfFtpTransferMode(&params.mode), int(params.append)))
 		if voidptr(result) == C.NULL {
 			return error('upload failed with local_file=$params.local_file remote_path=$params.remote_path mode=$params.mode append=$params.append')
 		}
@@ -472,7 +472,7 @@ pub:
 // specific functions, this function can be used to send
 // any FTP command to the server. If the command requires
 // one or more parameters, they can be specified in
-pub fn (f &Ftp) send_command(command string, parameter string) ?&FtpResponse {
+pub fn (f &Ftp) send_command(command string, parameter string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_sendCommand(&C.sfFtp(f), command.str, parameter.str))
 		if voidptr(result) == C.NULL {

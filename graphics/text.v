@@ -50,12 +50,12 @@ fn C.sfText_getColor(&C.sfText) C.sfColor
 fn C.sfText_getFillColor(&C.sfText) C.sfColor
 fn C.sfText_getOutlineColor(&C.sfText) C.sfColor
 fn C.sfText_getOutlineThickness(&C.sfText) f32
-fn C.sfText_findCharacterPos(&C.sfText, size_t) C.sfVector2f
+fn C.sfText_findCharacterPos(&C.sfText, usize) C.sfVector2f
 fn C.sfText_getLocalBounds(&C.sfText) C.sfFloatRect
 fn C.sfText_getGlobalBounds(&C.sfText) C.sfFloatRect
 
 // new_text: create a new text
-pub fn new_text() ?&Text {
+pub fn new_text() !&Text {
 	unsafe {
 		result := &Text(C.sfText_create())
 		if voidptr(result) == C.NULL {
@@ -66,7 +66,7 @@ pub fn new_text() ?&Text {
 }
 
 // copy: copy an existing text
-pub fn (t &Text) copy() ?&Text {
+pub fn (t &Text) copy() !&Text {
 	unsafe {
 		result := &Text(C.sfText_copy(&C.sfText(t)))
 		if voidptr(result) == C.NULL {
@@ -90,7 +90,7 @@ pub fn (t &Text) free() {
 // The default position of a text Text object is (0, 0).
 pub fn (t &Text) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfText_setPosition(&C.sfText(t), C.sfVector2f(position))
+		C.sfText_setPosition(&C.sfText(t), *&C.sfVector2f(&position))
 	}
 }
 
@@ -110,7 +110,7 @@ pub fn (t &Text) set_rotation(angle f32) {
 // The default scale of a text Text object is (1, 1).
 pub fn (t &Text) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfText_setScale(&C.sfText(t), C.sfVector2f(scale))
+		C.sfText_setScale(&C.sfText(t), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -123,7 +123,7 @@ pub fn (t &Text) set_scale(scale system.Vector2f) {
 // The default origin of a text object is (0, 0).
 pub fn (t &Text) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfText_setOrigin(&C.sfText(t), C.sfVector2f(origin))
+		C.sfText_setOrigin(&C.sfText(t), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -161,7 +161,7 @@ pub fn (t &Text) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (t &Text) move(offset system.Vector2f) {
 	unsafe {
-		C.sfText_move(&C.sfText(t), C.sfVector2f(offset))
+		C.sfText_move(&C.sfText(t), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -179,7 +179,7 @@ pub fn (t &Text) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (t &Text) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfText_scale(&C.sfText(t), C.sfVector2f(factors))
+		C.sfText_scale(&C.sfText(t), *&C.sfVector2f(&factors))
 	}
 }
 
@@ -199,16 +199,16 @@ pub fn (t &Text) get_inverse_transform() Transform {
 
 // set_string: set the string of a text (from an ANSI string)
 // A text's string is empty by default.
-pub fn (t &Text) set_string(string string) {
+pub fn (t &Text) set_string(s string) {
 	unsafe {
-		C.sfText_setString(&C.sfText(t), string.str)
+		C.sfText_setString(&C.sfText(t), s.str)
 	}
 }
 
 // set_unicode_string: set the string of a text (from a unicode string)
-pub fn (t &Text) set_unicode_string(string &u32) {
+pub fn (t &Text) set_unicode_string(ps &u32) {
 	unsafe {
-		C.sfText_setUnicodeString(&C.sfText(t), &u32(string))
+		C.sfText_setUnicodeString(&C.sfText(t), ps)
 	}
 }
 
@@ -274,7 +274,7 @@ pub fn (t &Text) set_style(style u32) {
 // will cause the outline to be displayed in the fill area of the text.
 pub fn (t &Text) set_color(color Color) {
 	unsafe {
-		C.sfText_setColor(&C.sfText(t), C.sfColor(color))
+		C.sfText_setColor(&C.sfText(t), *&C.sfColor(&color))
 	}
 }
 
@@ -284,7 +284,7 @@ pub fn (t &Text) set_color(color Color) {
 // will cause the outline to be displayed in the fill area of the text.
 pub fn (t &Text) set_fill_color(color Color) {
 	unsafe {
-		C.sfText_setFillColor(&C.sfText(t), C.sfColor(color))
+		C.sfText_setFillColor(&C.sfText(t), *&C.sfColor(&color))
 	}
 }
 
@@ -292,7 +292,7 @@ pub fn (t &Text) set_fill_color(color Color) {
 // By default, the text's outline color is opaque black.
 pub fn (t &Text) set_outline_color(color Color) {
 	unsafe {
-		C.sfText_setOutlineColor(&C.sfText(t), C.sfColor(color))
+		C.sfText_setOutlineColor(&C.sfText(t), *&C.sfColor(&color))
 	}
 }
 
@@ -314,7 +314,7 @@ pub fn (t &Text) get_string() string {
 }
 
 // get_unicode_string: get the string of a text (returns a unicode string)
-pub fn (t &Text) get_unicode_string() ?&u32 {
+pub fn (t &Text) get_unicode_string() !&u32 {
 	unsafe {
 		result := &u32(C.sfText_getUnicodeString(&C.sfText(t)))
 		if voidptr(result) == C.NULL {
@@ -328,7 +328,7 @@ pub fn (t &Text) get_unicode_string() ?&u32 {
 // If the text has no font attached, a NULL pointer is returned.
 // The returned pointer is const, which means that you can't
 // modify the font when you retrieve it with this function.
-pub fn (t &Text) get_font() ?&Font {
+pub fn (t &Text) get_font() !&Font {
 	unsafe {
 		result := &Font(C.sfText_getFont(&C.sfText(t)))
 		if voidptr(result) == C.NULL {
@@ -396,7 +396,7 @@ pub fn (t &Text) get_outline_thickness() f32 {
 // the string is returned.
 pub fn (t &Text) find_character_pos(index u64) system.Vector2f {
 	unsafe {
-		return system.Vector2f(C.sfText_findCharacterPos(&C.sfText(t), size_t(index)))
+		return system.Vector2f(C.sfText_findCharacterPos(&C.sfText(t), usize(index)))
 	}
 }
 

@@ -26,7 +26,7 @@ fn C.sfMouse_setPosition(C.sfVector2i, &C.sfWindow)
 // mouse_is_button_pressed: check if a mouse button is pressed
 pub fn mouse_is_button_pressed(button MouseButton) bool {
 	unsafe {
-		return C.sfMouse_isButtonPressed(C.sfMouseButton(button)) != 0
+		return C.sfMouse_isButtonPressed(*&C.sfMouseButton(&button)) != 0
 	}
 }
 
@@ -44,6 +44,6 @@ pub fn mouse_get_position(relativeTo &Window) system.Vector2i {
 // cursor relative to the given window, or desktop if NULL is passed.
 pub fn mouse_set_position(position system.Vector2i, relativeTo &Window) {
 	unsafe {
-		C.sfMouse_setPosition(C.sfVector2i(position), &C.sfWindow(relativeTo))
+		C.sfMouse_setPosition(*&C.sfVector2i(&position), &C.sfWindow(relativeTo))
 	}
 }

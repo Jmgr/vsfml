@@ -3,7 +3,7 @@ module system
 #include <SFML/System/Time.h>
 
 [typedef]
-struct C.sfTime {
+pub struct C.sfTime {
 pub:
 	microseconds i64
 }
@@ -21,21 +21,21 @@ fn C.sfMicroseconds(i64) C.sfTime
 // as_seconds: return a time value as a number of seconds
 pub fn (t Time) as_seconds() f32 {
 	unsafe {
-		return f32(C.sfTime_asSeconds(C.sfTime(t)))
+		return f32(C.sfTime_asSeconds(*&C.sfTime(&t)))
 	}
 }
 
 // as_milliseconds: return a time value as a number of milliseconds
 pub fn (t Time) as_milliseconds() int {
 	unsafe {
-		return int(C.sfTime_asMilliseconds(C.sfTime(t)))
+		return int(C.sfTime_asMilliseconds(*&C.sfTime(&t)))
 	}
 }
 
 // as_microseconds: return a time value as a number of microseconds
 pub fn (t Time) as_microseconds() i64 {
 	unsafe {
-		return i64(C.sfTime_asMicroseconds(C.sfTime(t)))
+		return i64(C.sfTime_asMicroseconds(*&C.sfTime(&t)))
 	}
 }
 

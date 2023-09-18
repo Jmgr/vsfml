@@ -10,7 +10,7 @@ fn C.sfTcpListener_listen(&C.sfTcpListener, u16, C.sfIpAddress) C.sfSocketStatus
 fn C.sfTcpListener_accept(&C.sfTcpListener, &&C.sfTcpSocket) C.sfSocketStatus
 
 // new_tcp_listener: create a new TCP listener
-pub fn new_tcp_listener() ?&TcpListener {
+pub fn new_tcp_listener() !&TcpListener {
 	unsafe {
 		result := &TcpListener(C.sfTcpListener_create())
 		if voidptr(result) == C.NULL {

@@ -26,12 +26,12 @@ fn C.sfShader_setMat3Uniform(&C.sfShader, &char, &C.sfGlslMat3)
 fn C.sfShader_setMat4Uniform(&C.sfShader, &char, &C.sfGlslMat4)
 fn C.sfShader_setTextureUniform(&C.sfShader, &char, &C.sfTexture)
 fn C.sfShader_setCurrentTextureUniform(&C.sfShader, &char)
-fn C.sfShader_setFloatUniformArray(&C.sfShader, &char, &f32, size_t)
-fn C.sfShader_setVec2UniformArray(&C.sfShader, &char, &C.sfGlslVec2, size_t)
-fn C.sfShader_setVec3UniformArray(&C.sfShader, &char, &C.sfGlslVec3, size_t)
-fn C.sfShader_setVec4UniformArray(&C.sfShader, &char, &C.sfGlslVec4, size_t)
-fn C.sfShader_setMat3UniformArray(&C.sfShader, &char, &C.sfGlslMat3, size_t)
-fn C.sfShader_setMat4UniformArray(&C.sfShader, &char, &C.sfGlslMat4, size_t)
+fn C.sfShader_setFloatUniformArray(&C.sfShader, &char, &f32, usize)
+fn C.sfShader_setVec2UniformArray(&C.sfShader, &char, &C.sfGlslVec2, usize)
+fn C.sfShader_setVec3UniformArray(&C.sfShader, &char, &C.sfGlslVec3, usize)
+fn C.sfShader_setVec4UniformArray(&C.sfShader, &char, &C.sfGlslVec4, usize)
+fn C.sfShader_setMat3UniformArray(&C.sfShader, &char, &C.sfGlslMat3, usize)
+fn C.sfShader_setMat4UniformArray(&C.sfShader, &char, &C.sfGlslMat4, usize)
 fn C.sfShader_bind(&C.sfShader)
 fn C.sfShader_isAvailable() int
 fn C.sfShader_isGeometryAvailable() int
@@ -44,7 +44,7 @@ fn C.sfShader_isGeometryAvailable() int
 // in GLSL language. GLSL is a C-like language dedicated to
 // OpenGL shaders; you'll probably need to read a good documentation
 // for it before writing your own shaders.
-pub fn new_shader_from_file(params ShaderNewShaderFromFileParams) ?&Shader {
+pub fn new_shader_from_file(params ShaderNewShaderFromFileParams) !&Shader {
 	unsafe {
 		result := &Shader(C.sfShader_createFromFile(params.vertex_shader_filename.str,
 			params.geometry_shader_filename.str, params.fragment_shader_filename.str))
@@ -71,7 +71,7 @@ pub:
 // a C-like language dedicated to OpenGL shaders; you'll
 // probably need to read a good documentation for it before
 // writing your own shaders.
-pub fn new_shader_from_memory(params ShaderNewShaderFromMemoryParams) ?&Shader {
+pub fn new_shader_from_memory(params ShaderNewShaderFromMemoryParams) !&Shader {
 	unsafe {
 		result := &Shader(C.sfShader_createFromMemory(params.vertex_shader.str, params.geometry_shader.str,
 			params.fragment_shader.str))
@@ -98,7 +98,7 @@ pub:
 // GLSL is a C-like language dedicated to OpenGL shaders;
 // you'll probably need to read a good documentation for
 // it before writing your own shaders.
-pub fn new_shader_from_stream(params ShaderNewShaderFromStreamParams) ?&Shader {
+pub fn new_shader_from_stream(params ShaderNewShaderFromStreamParams) !&Shader {
 	unsafe {
 		result := &Shader(C.sfShader_createFromStream(&C.sfInputStream(params.vertex_shader_stream),
 			&C.sfInputStream(params.geometry_shader_stream), &C.sfInputStream(params.fragment_shader_stream)))
@@ -135,14 +135,14 @@ pub fn (s &Shader) set_float_uniform(name string, x f32) {
 // setvec2uniform: specify value for \p vec2 uniform
 pub fn (s &Shader) setvec2uniform(name string, vector GlslVec2) {
 	unsafe {
-		C.sfShader_setVec2Uniform(&C.sfShader(s), name.str, C.sfGlslVec2(vector))
+		C.sfShader_setVec2Uniform(&C.sfShader(s), name.str, *&C.sfGlslVec2(&vector))
 	}
 }
 
 // setvec3uniform: specify value for \p vec3 uniform
 pub fn (s &Shader) setvec3uniform(name string, vector GlslVec3) {
 	unsafe {
-		C.sfShader_setVec3Uniform(&C.sfShader(s), name.str, C.sfGlslVec3(vector))
+		C.sfShader_setVec3Uniform(&C.sfShader(s), name.str, *&C.sfGlslVec3(&vector))
 	}
 }
 
@@ -151,14 +151,14 @@ pub fn (s &Shader) setvec3uniform(name string, vector GlslVec3) {
 // the use of fromsfColor(sfColor);
 pub fn (s &Shader) setvec4uniform(name string, vector GlslVec4) {
 	unsafe {
-		C.sfShader_setVec4Uniform(&C.sfShader(s), name.str, C.sfGlslVec4(vector))
+		C.sfShader_setVec4Uniform(&C.sfShader(s), name.str, *&C.sfGlslVec4(&vector))
 	}
 }
 
 // set_color_uniform: specify value for \p vec4 uniform
 pub fn (s &Shader) set_color_uniform(name string, color Color) {
 	unsafe {
-		C.sfShader_setColorUniform(&C.sfShader(s), name.str, C.sfColor(color))
+		C.sfShader_setColorUniform(&C.sfShader(s), name.str, *&C.sfColor(&color))
 	}
 }
 
@@ -172,14 +172,14 @@ pub fn (s &Shader) set_int_uniform(name string, x int) {
 // setivec2uniform: specify value for \p ivec2 uniform
 pub fn (s &Shader) setivec2uniform(name string, vector GlslIvec2) {
 	unsafe {
-		C.sfShader_setIvec2Uniform(&C.sfShader(s), name.str, C.sfGlslIvec2(vector))
+		C.sfShader_setIvec2Uniform(&C.sfShader(s), name.str, *&C.sfGlslIvec2(&vector))
 	}
 }
 
 // setivec3uniform: specify value for \p ivec3 uniform
 pub fn (s &Shader) setivec3uniform(name string, vector GlslIvec3) {
 	unsafe {
-		C.sfShader_setIvec3Uniform(&C.sfShader(s), name.str, C.sfGlslIvec3(vector))
+		C.sfShader_setIvec3Uniform(&C.sfShader(s), name.str, *&C.sfGlslIvec3(&vector))
 	}
 }
 
@@ -188,14 +188,14 @@ pub fn (s &Shader) setivec3uniform(name string, vector GlslIvec3) {
 // the use of fromsfColor(sfColor);
 pub fn (s &Shader) setivec4uniform(name string, vector GlslIvec4) {
 	unsafe {
-		C.sfShader_setIvec4Uniform(&C.sfShader(s), name.str, C.sfGlslIvec4(vector))
+		C.sfShader_setIvec4Uniform(&C.sfShader(s), name.str, *&C.sfGlslIvec4(&vector))
 	}
 }
 
 // set_int_color_uniform: specify value for \p ivec4 uniform
 pub fn (s &Shader) set_int_color_uniform(name string, color Color) {
 	unsafe {
-		C.sfShader_setIntColorUniform(&C.sfShader(s), name.str, C.sfColor(color))
+		C.sfShader_setIntColorUniform(&C.sfShader(s), name.str, *&C.sfColor(&color))
 	}
 }
 
@@ -209,14 +209,14 @@ pub fn (s &Shader) set_bool_uniform(name string, x bool) {
 // setbvec2uniform: specify value for \p bvec2 uniform
 pub fn (s &Shader) setbvec2uniform(name string, vector GlslBvec2) {
 	unsafe {
-		C.sfShader_setBvec2Uniform(&C.sfShader(s), name.str, C.sfGlslBvec2(vector))
+		C.sfShader_setBvec2Uniform(&C.sfShader(s), name.str, *&C.sfGlslBvec2(&vector))
 	}
 }
 
 // setbvec3uniform: specify value for \p Bvec3 uniform
 pub fn (s &Shader) setbvec3uniform(name string, vector GlslBvec3) {
 	unsafe {
-		C.sfShader_setBvec3Uniform(&C.sfShader(s), name.str, C.sfGlslBvec3(vector))
+		C.sfShader_setBvec3Uniform(&C.sfShader(s), name.str, *&C.sfGlslBvec3(&vector))
 	}
 }
 
@@ -225,7 +225,7 @@ pub fn (s &Shader) setbvec3uniform(name string, vector GlslBvec3) {
 // the use of fromsfColor(sfColor);
 pub fn (s &Shader) setbvec4uniform(name string, vector GlslBvec4) {
 	unsafe {
-		C.sfShader_setBvec4Uniform(&C.sfShader(s), name.str, C.sfGlslBvec4(vector))
+		C.sfShader_setBvec4Uniform(&C.sfShader(s), name.str, *&C.sfGlslBvec4(&vector))
 	}
 }
 
@@ -267,7 +267,7 @@ pub fn (s &Shader) set_current_texture_uniform(name string) {
 pub fn (s &Shader) set_float_uniform_array(params ShaderSetFloatUniformArrayParams) {
 	unsafe {
 		C.sfShader_setFloatUniformArray(&C.sfShader(s), params.name.str, &f32(params.scalar_array),
-			size_t(params.length))
+			usize(params.length))
 	}
 }
 
@@ -283,7 +283,7 @@ pub:
 pub fn (s &Shader) setvec2uniformarray(params ShaderSetvec2uniformarrayParams) {
 	unsafe {
 		C.sfShader_setVec2UniformArray(&C.sfShader(s), params.name.str, &C.sfGlslVec2(params.vector_array),
-			size_t(params.length))
+			usize(params.length))
 	}
 }
 
@@ -299,7 +299,7 @@ pub:
 pub fn (s &Shader) setvec3uniformarray(params ShaderSetvec3uniformarrayParams) {
 	unsafe {
 		C.sfShader_setVec3UniformArray(&C.sfShader(s), params.name.str, &C.sfGlslVec3(params.vector_array),
-			size_t(params.length))
+			usize(params.length))
 	}
 }
 
@@ -315,7 +315,7 @@ pub:
 pub fn (s &Shader) setvec4uniformarray(params ShaderSetvec4uniformarrayParams) {
 	unsafe {
 		C.sfShader_setVec4UniformArray(&C.sfShader(s), params.name.str, &C.sfGlslVec4(params.vector_array),
-			size_t(params.length))
+			usize(params.length))
 	}
 }
 
@@ -331,7 +331,7 @@ pub:
 pub fn (s &Shader) setmat3uniformarray(params ShaderSetmat3uniformarrayParams) {
 	unsafe {
 		C.sfShader_setMat3UniformArray(&C.sfShader(s), params.name.str, &C.sfGlslMat3(params.matrix_array),
-			size_t(params.length))
+			usize(params.length))
 	}
 }
 
@@ -347,7 +347,7 @@ pub:
 pub fn (s &Shader) setmat4uniformarray(params ShaderSetmat4uniformarrayParams) {
 	unsafe {
 		C.sfShader_setMat4UniformArray(&C.sfShader(s), params.name.str, &C.sfGlslMat4(params.matrix_array),
-			size_t(params.length))
+			usize(params.length))
 	}
 }
 

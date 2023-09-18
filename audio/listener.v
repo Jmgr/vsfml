@@ -34,7 +34,7 @@ pub fn listener_get_global_volume() f32 {
 // The default listener's position is (0, 0, 0).
 pub fn listener_set_position(position system.Vector3f) {
 	unsafe {
-		C.sfListener_setPosition(C.sfVector3f(position))
+		C.sfListener_setPosition(*&C.sfVector3f(&position))
 	}
 }
 
@@ -54,7 +54,7 @@ pub fn listener_get_position() system.Vector3f {
 // The default listener's direction is (0, 0, -1).
 pub fn listener_set_direction(direction system.Vector3f) {
 	unsafe {
-		C.sfListener_setDirection(C.sfVector3f(direction))
+		C.sfListener_setDirection(*&C.sfVector3f(&direction))
 	}
 }
 
@@ -74,7 +74,7 @@ pub fn listener_get_direction() system.Vector3f {
 // not necessary to change it, especially in 2D scenarios.
 pub fn listener_set_up_vector(upVector system.Vector3f) {
 	unsafe {
-		C.sfListener_setUpVector(C.sfVector3f(upVector))
+		C.sfListener_setUpVector(*&C.sfVector3f(&upVector))
 	}
 }
 

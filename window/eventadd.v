@@ -68,7 +68,7 @@ pub fn (w &Window) poll_event() ?Event {
 	if C.pollEventWindow(w, &evt_type, &evt) == 0 {
 		return none
 	}
-	return process_event(EventTypeEnum(evt_type), evt)
+	return process_event(unsafe{EventTypeEnum(evt_type)}, evt)
 }
 
 struct EventType {

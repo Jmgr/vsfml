@@ -33,10 +33,10 @@ fn C.sfVertexBuffer_isAvailable() int
 // Creates the vertex buffer, allocating enough graphcis
 // memory to hold \p vertexCount vertices, and sets its
 // primitive type to \p type and usage to \p usage.
-pub fn new_vertex_buffer(params VertexBufferNewVertexBufferParams) ?&VertexBuffer {
+pub fn new_vertex_buffer(params VertexBufferNewVertexBufferParams) !&VertexBuffer {
 	unsafe {
-		result := &VertexBuffer(C.sfVertexBuffer_create(u32(params.vertex_count), C.sfPrimitiveType(params.primitive_type),
-			C.sfVertexBufferUsage(params.usage)))
+		result := &VertexBuffer(C.sfVertexBuffer_create(u32(params.vertex_count), *&C.sfPrimitiveType(&params.primitive_type),
+			*&C.sfVertexBufferUsage(&params.usage)))
 		if voidptr(result) == C.NULL {
 			return error('new_vertex_buffer failed with vertex_count=$params.vertex_count primitive_type=$params.primitive_type usage=$params.usage')
 		}
@@ -53,7 +53,7 @@ pub:
 }
 
 // copy: copy an existing vertex buffer
-pub fn (v &VertexBuffer) copy() ?&VertexBuffer {
+pub fn (v &VertexBuffer) copy() !&VertexBuffer {
 	unsafe {
 		result := &VertexBuffer(C.sfVertexBuffer_copy(&C.sfVertexBuffer(v)))
 		if voidptr(result) == C.NULL {
@@ -107,7 +107,7 @@ pub fn (v &VertexBuffer) swap(right &VertexBuffer) {
 // The default primitive type is sf::Points.
 pub fn (v &VertexBuffer) set_primitive_type(primitiveType PrimitiveType) {
 	unsafe {
-		C.sfVertexBuffer_setPrimitiveType(&C.sfVertexBuffer(v), C.sfPrimitiveType(primitiveType))
+		C.sfVertexBuffer_setPrimitiveType(&C.sfVertexBuffer(v), *&C.sfPrimitiveType(&primitiveType))
 	}
 }
 
@@ -127,7 +127,7 @@ pub fn (v &VertexBuffer) get_primitive_type() PrimitiveType {
 // The default primitive type is VertexBufferStream.
 pub fn (v &VertexBuffer) set_usage(usage VertexBufferUsage) {
 	unsafe {
-		C.sfVertexBuffer_setUsage(&C.sfVertexBuffer(v), C.sfVertexBufferUsage(usage))
+		C.sfVertexBuffer_setUsage(&C.sfVertexBuffer(v), *&C.sfVertexBufferUsage(&usage))
 	}
 }
 

@@ -3,7 +3,7 @@ module system
 #include <SFML/System/Vector2.h>
 
 [typedef]
-struct C.sfVector2i {
+pub struct C.sfVector2i {
 pub:
 	x int
 	y int
@@ -13,7 +13,7 @@ pub:
 pub type Vector2i = C.sfVector2i
 
 [typedef]
-struct C.sfVector2u {
+pub struct C.sfVector2u {
 pub:
 	x int
 	y int
@@ -23,7 +23,7 @@ pub:
 pub type Vector2u = C.sfVector2u
 
 [typedef]
-struct C.sfVector2f {
+pub struct C.sfVector2f {
 pub:
 	x f32
 	y f32

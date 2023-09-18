@@ -11,14 +11,14 @@ fn C.sfTcpSocket_isBlocking(&C.sfTcpSocket) int
 fn C.sfTcpSocket_getRemoteAddress(&C.sfTcpSocket) C.sfIpAddress
 fn C.sfTcpSocket_connect(&C.sfTcpSocket, C.sfIpAddress, u16, C.sfTime) C.sfSocketStatus
 fn C.sfTcpSocket_disconnect(&C.sfTcpSocket)
-fn C.sfTcpSocket_send(&C.sfTcpSocket, voidptr, size_t) C.sfSocketStatus
-fn C.sfTcpSocket_sendPartial(&C.sfTcpSocket, voidptr, size_t, &size_t) C.sfSocketStatus
-fn C.sfTcpSocket_receive(&C.sfTcpSocket, voidptr, size_t, &size_t) C.sfSocketStatus
+fn C.sfTcpSocket_send(&C.sfTcpSocket, voidptr, usize) C.sfSocketStatus
+fn C.sfTcpSocket_sendPartial(&C.sfTcpSocket, voidptr, usize, &usize) C.sfSocketStatus
+fn C.sfTcpSocket_receive(&C.sfTcpSocket, voidptr, usize, &usize) C.sfSocketStatus
 fn C.sfTcpSocket_sendPacket(&C.sfTcpSocket, &C.sfPacket) C.sfSocketStatus
 fn C.sfTcpSocket_receivePacket(&C.sfTcpSocket, &C.sfPacket) C.sfSocketStatus
 
 // new_tcp_socket: create a new TCP socket
-pub fn new_tcp_socket() ?&TcpSocket {
+pub fn new_tcp_socket() !&TcpSocket {
 	unsafe {
 		result := &TcpSocket(C.sfTcpSocket_create())
 		if voidptr(result) == C.NULL {
@@ -74,8 +74,8 @@ pub fn (t &TcpSocket) get_remote_address() IpAddress {
 // If the socket was previously connected, it is first disconnected.
 pub fn (t &TcpSocket) connect(params TcpSocketConnectParams) SocketStatus {
 	unsafe {
-		return SocketStatus(C.sfTcpSocket_connect(&C.sfTcpSocket(t), C.sfIpAddress(params.remote_address),
-			u16(params.remote_port), C.sfTime(params.timeout)))
+		return SocketStatus(C.sfTcpSocket_connect(&C.sfTcpSocket(t), *&C.sfIpAddress(&params.remote_address),
+			u16(params.remote_port), *&C.sfTime(&params.timeout)))
 	}
 }
 
@@ -98,12 +98,12 @@ pub fn (t &TcpSocket) disconnect() {
 
 // send: send raw data to the remote peer of a TCP socket
 // To be able to handle partial sends over non-blocking
-// sockets, use the sendPartial(sfTcpSocket*, const void*, std::size_t, size_t*)
+// sockets, use the sendPartial(sfTcpSocket*, const void*, std::usize, usize*)
 // overload instead.
 // This function will fail if the socket is not connected.
 pub fn (t &TcpSocket) send(data voidptr, size u64) SocketStatus {
 	unsafe {
-		return SocketStatus(C.sfTcpSocket_send(&C.sfTcpSocket(t), voidptr(data), size_t(size)))
+		return SocketStatus(C.sfTcpSocket_send(&C.sfTcpSocket(t), data, usize(size)))
 	}
 }
 
@@ -111,8 +111,8 @@ pub fn (t &TcpSocket) send(data voidptr, size u64) SocketStatus {
 // This function will fail if the socket is not connected.
 pub fn (t &TcpSocket) send_partial(params TcpSocketSendPartialParams) SocketStatus {
 	unsafe {
-		return SocketStatus(C.sfTcpSocket_sendPartial(&C.sfTcpSocket(t), voidptr(params.data),
-			size_t(params.size), &size_t(params.sent)))
+		return SocketStatus(C.sfTcpSocket_sendPartial(&C.sfTcpSocket(t), params.data,
+			usize(params.size), &usize(params.sent)))
 	}
 }
 
@@ -130,8 +130,8 @@ pub:
 // This function will fail if the socket is not connected.
 pub fn (t &TcpSocket) receive(params TcpSocketReceiveParams) SocketStatus {
 	unsafe {
-		return SocketStatus(C.sfTcpSocket_receive(&C.sfTcpSocket(t), voidptr(params.data),
-			size_t(params.size), &size_t(params.received)))
+		return SocketStatus(C.sfTcpSocket_receive(&C.sfTcpSocket(t), params.data,
+			usize(params.size), &usize(params.received)))
 	}
 }
 

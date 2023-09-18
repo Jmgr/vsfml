@@ -20,7 +20,7 @@ fn C.sfRenderWindow_getSize(&C.sfRenderWindow) C.sfVector2u
 fn C.sfRenderWindow_setSize(&C.sfRenderWindow, C.sfVector2u)
 fn C.sfRenderWindow_setTitle(&C.sfRenderWindow, &char)
 fn C.sfRenderWindow_setUnicodeTitle(&C.sfRenderWindow, &u32)
-fn C.sfRenderWindow_setIcon(&C.sfRenderWindow, u32, u32, &byte)
+fn C.sfRenderWindow_setIcon(&C.sfRenderWindow, u32, u32, &u8)
 fn C.sfRenderWindow_setVisible(&C.sfRenderWindow, int)
 fn C.sfRenderWindow_setVerticalSyncEnabled(&C.sfRenderWindow, int)
 fn C.sfRenderWindow_setMouseCursorVisible(&C.sfRenderWindow, int)
@@ -49,7 +49,7 @@ fn C.sfRenderWindow_drawConvexShape(&C.sfRenderWindow, &C.sfConvexShape, &C.sfRe
 fn C.sfRenderWindow_drawRectangleShape(&C.sfRenderWindow, &C.sfRectangleShape, &C.sfRenderStates)
 fn C.sfRenderWindow_drawVertexArray(&C.sfRenderWindow, &C.sfVertexArray, &C.sfRenderStates)
 fn C.sfRenderWindow_drawVertexBuffer(&C.sfRenderWindow, &C.sfVertexBuffer, &C.sfRenderStates)
-fn C.sfRenderWindow_drawPrimitives(&C.sfRenderWindow, &C.sfVertex, size_t, C.sfPrimitiveType, &C.sfRenderStates)
+fn C.sfRenderWindow_drawPrimitives(&C.sfRenderWindow, &C.sfVertex, usize, C.sfPrimitiveType, &C.sfRenderStates)
 fn C.sfRenderWindow_pushGLStates(&C.sfRenderWindow)
 fn C.sfRenderWindow_popGLStates(&C.sfRenderWindow)
 fn C.sfRenderWindow_resetGLStates(&C.sfRenderWindow)
@@ -58,9 +58,9 @@ fn C.sfMouse_setPositionRenderWindow(C.sfVector2i, &C.sfRenderWindow)
 fn C.sfTouch_getPositionRenderWindow(u32, &C.sfRenderWindow) C.sfVector2i
 
 // new_render_window: construct a new render window
-pub fn new_render_window(params RenderWindowNewRenderWindowParams) ?&RenderWindow {
+pub fn new_render_window(params RenderWindowNewRenderWindowParams) !&RenderWindow {
 	unsafe {
-		result := &RenderWindow(C.sfRenderWindow_create(C.sfVideoMode(params.mode), params.title.str,
+		result := &RenderWindow(C.sfRenderWindow_create(*&C.sfVideoMode(&params.mode), params.title.str,
 			u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
 			return error('new_render_window failed with mode=$params.mode title=$params.title style=$params.style')
@@ -79,9 +79,9 @@ pub:
 }
 
 // new_render_window_unicode: construct a new render window (with a UTF-32 title)
-pub fn new_render_window_unicode(params RenderWindowNewRenderWindowUnicodeParams) ?&RenderWindow {
+pub fn new_render_window_unicode(params RenderWindowNewRenderWindowUnicodeParams) !&RenderWindow {
 	unsafe {
-		result := &RenderWindow(C.sfRenderWindow_createUnicode(C.sfVideoMode(params.mode),
+		result := &RenderWindow(C.sfRenderWindow_createUnicode(*&C.sfVideoMode(&params.mode),
 			&u32(params.title), u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
 			return error('new_render_window_unicode failed with mode=$params.mode style=$params.style')
@@ -100,9 +100,9 @@ pub:
 }
 
 // new_render_window_from_handle: construct a render window from an existing control
-pub fn new_render_window_from_handle(params RenderWindowNewRenderWindowFromHandleParams) ?&RenderWindow {
+pub fn new_render_window_from_handle(params RenderWindowNewRenderWindowFromHandleParams) !&RenderWindow {
 	unsafe {
-		result := &RenderWindow(C.sfRenderWindow_createFromHandle(C.sfWindowHandle(params.handle),
+		result := &RenderWindow(C.sfRenderWindow_createFromHandle(*&C.sfWindowHandle(&params.handle),
 			&C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
 			return error('new_render_window_from_handle failed with handle=$params.handle')
@@ -165,7 +165,7 @@ pub fn (r &RenderWindow) get_position() system.Vector2i {
 // Only works for top-level windows
 pub fn (r &RenderWindow) set_position(position system.Vector2i) {
 	unsafe {
-		C.sfRenderWindow_setPosition(&C.sfRenderWindow(r), C.sfVector2i(position))
+		C.sfRenderWindow_setPosition(&C.sfRenderWindow(r), *&C.sfVector2i(&position))
 	}
 }
 
@@ -179,7 +179,7 @@ pub fn (r &RenderWindow) get_size() system.Vector2u {
 // set_size: change the size of the rendering region of a render window
 pub fn (r &RenderWindow) set_size(size system.Vector2u) {
 	unsafe {
-		C.sfRenderWindow_setSize(&C.sfRenderWindow(r), C.sfVector2u(size))
+		C.sfRenderWindow_setSize(&C.sfRenderWindow(r), *&C.sfVector2u(&size))
 	}
 }
 
@@ -201,7 +201,7 @@ pub fn (r &RenderWindow) set_unicode_title(title &u32) {
 pub fn (r &RenderWindow) set_icon(params RenderWindowSetIconParams) {
 	unsafe {
 		C.sfRenderWindow_setIcon(&C.sfRenderWindow(r), u32(params.width), u32(params.height),
-			&byte(params.pixels))
+			&u8(params.pixels))
 	}
 }
 
@@ -210,7 +210,7 @@ pub struct RenderWindowSetIconParams {
 pub:
 	width  u32   [required] // icon's width, in pixels
 	height u32   [required] // icon's height, in pixels
-	pixels &byte [required] // pointer to the pixels in memory, format must be RGBA 32 bits
+	pixels &u8 [required] // pointer to the pixels in memory, format must be RGBA 32 bits
 }
 
 // set_visible: show or hide a render window
@@ -318,7 +318,7 @@ pub fn (r &RenderWindow) get_system_handle() window.WindowHandle {
 // clear: clear a render window with the given color
 pub fn (r &RenderWindow) clear(color Color) {
 	unsafe {
-		C.sfRenderWindow_clear(&C.sfRenderWindow(r), C.sfColor(color))
+		C.sfRenderWindow_clear(&C.sfRenderWindow(r), *&C.sfColor(&color))
 	}
 }
 
@@ -330,7 +330,7 @@ pub fn (r &RenderWindow) set_view(view &View) {
 }
 
 // get_view: get the current active view of a render window
-pub fn (r &RenderWindow) get_view() ?&View {
+pub fn (r &RenderWindow) get_view() !&View {
 	unsafe {
 		result := &View(C.sfRenderWindow_getView(&C.sfRenderWindow(r)))
 		if voidptr(result) == C.NULL {
@@ -341,7 +341,7 @@ pub fn (r &RenderWindow) get_view() ?&View {
 }
 
 // get_default_view: get the default view of a render window
-pub fn (r &RenderWindow) get_default_view() ?&View {
+pub fn (r &RenderWindow) get_default_view() !&View {
 	unsafe {
 		result := &View(C.sfRenderWindow_getDefaultView(&C.sfRenderWindow(r)))
 		if voidptr(result) == C.NULL {
@@ -376,7 +376,7 @@ pub fn (r &RenderWindow) get_viewport(view &View) IntRect {
 pub fn (r &RenderWindow) map_pixel_to_coords(point system.Vector2i, view &View) system.Vector2f {
 	unsafe {
 		return system.Vector2f(C.sfRenderWindow_mapPixelToCoords(&C.sfRenderWindow(r),
-			C.sfVector2i(point), &C.sfView(view)))
+			*&C.sfVector2i(&point), &C.sfView(view)))
 	}
 }
 
@@ -395,7 +395,7 @@ pub fn (r &RenderWindow) map_pixel_to_coords(point system.Vector2i, view &View) 
 pub fn (r &RenderWindow) map_coords_to_pixel(point system.Vector2f, view &View) system.Vector2i {
 	unsafe {
 		return system.Vector2i(C.sfRenderWindow_mapCoordsToPixel(&C.sfRenderWindow(r),
-			C.sfVector2f(point), &C.sfView(view)))
+			*&C.sfVector2f(&point), &C.sfView(view)))
 	}
 }
 
@@ -522,7 +522,7 @@ pub:
 pub fn (r &RenderWindow) draw_primitives(params RenderWindowDrawPrimitivesParams) {
 	unsafe {
 		C.sfRenderWindow_drawPrimitives(&C.sfRenderWindow(r), &C.sfVertex(params.vertices),
-			size_t(params.vertex_count), C.sfPrimitiveType(params.primitive_type), &C.sfRenderStates(params.states))
+			usize(params.vertex_count), *&C.sfPrimitiveType(&params.primitive_type), &C.sfRenderStates(params.states))
 	}
 }
 
@@ -580,7 +580,7 @@ pub fn mouse_get_position_render_window(relativeTo &RenderWindow) system.Vector2
 // cursor relative to the given render-window, or desktop if NULL is passed.
 pub fn mouse_set_position_render_window(position system.Vector2i, relativeTo &RenderWindow) {
 	unsafe {
-		C.sfMouse_setPositionRenderWindow(C.sfVector2i(position), &C.sfRenderWindow(relativeTo))
+		C.sfMouse_setPositionRenderWindow(*&C.sfVector2i(&position), &C.sfRenderWindow(relativeTo))
 	}
 }
 

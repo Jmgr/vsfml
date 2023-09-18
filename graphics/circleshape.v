@@ -30,16 +30,16 @@ fn C.sfCircleShape_getTextureRect(&C.sfCircleShape) C.sfIntRect
 fn C.sfCircleShape_getFillColor(&C.sfCircleShape) C.sfColor
 fn C.sfCircleShape_getOutlineColor(&C.sfCircleShape) C.sfColor
 fn C.sfCircleShape_getOutlineThickness(&C.sfCircleShape) f32
-fn C.sfCircleShape_getPointCount(&C.sfCircleShape) size_t
-fn C.sfCircleShape_getPoint(&C.sfCircleShape, size_t) C.sfVector2f
+fn C.sfCircleShape_getPointCount(&C.sfCircleShape) usize
+fn C.sfCircleShape_getPoint(&C.sfCircleShape, usize) C.sfVector2f
 fn C.sfCircleShape_setRadius(&C.sfCircleShape, f32)
 fn C.sfCircleShape_getRadius(&C.sfCircleShape) f32
-fn C.sfCircleShape_setPointCount(&C.sfCircleShape, size_t)
+fn C.sfCircleShape_setPointCount(&C.sfCircleShape, usize)
 fn C.sfCircleShape_getLocalBounds(&C.sfCircleShape) C.sfFloatRect
 fn C.sfCircleShape_getGlobalBounds(&C.sfCircleShape) C.sfFloatRect
 
 // new_circle_shape: create a new circle shape
-pub fn new_circle_shape() ?&CircleShape {
+pub fn new_circle_shape() !&CircleShape {
 	unsafe {
 		result := &CircleShape(C.sfCircleShape_create())
 		if voidptr(result) == C.NULL {
@@ -50,7 +50,7 @@ pub fn new_circle_shape() ?&CircleShape {
 }
 
 // copy: copy an existing circle shape
-pub fn (c &CircleShape) copy() ?&CircleShape {
+pub fn (c &CircleShape) copy() !&CircleShape {
 	unsafe {
 		result := &CircleShape(C.sfCircleShape_copy(&C.sfCircleShape(c)))
 		if voidptr(result) == C.NULL {
@@ -74,7 +74,7 @@ pub fn (c &CircleShape) free() {
 // The default position of a circle Shape object is (0, 0).
 pub fn (c &CircleShape) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfCircleShape_setPosition(&C.sfCircleShape(c), C.sfVector2f(position))
+		C.sfCircleShape_setPosition(&C.sfCircleShape(c), *&C.sfVector2f(&position))
 	}
 }
 
@@ -94,7 +94,7 @@ pub fn (c &CircleShape) set_rotation(angle f32) {
 // The default scale of a circle Shape object is (1, 1).
 pub fn (c &CircleShape) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfCircleShape_setScale(&C.sfCircleShape(c), C.sfVector2f(scale))
+		C.sfCircleShape_setScale(&C.sfCircleShape(c), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -107,7 +107,7 @@ pub fn (c &CircleShape) set_scale(scale system.Vector2f) {
 // The default origin of a circle Shape object is (0, 0).
 pub fn (c &CircleShape) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfCircleShape_setOrigin(&C.sfCircleShape(c), C.sfVector2f(origin))
+		C.sfCircleShape_setOrigin(&C.sfCircleShape(c), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -145,7 +145,7 @@ pub fn (c &CircleShape) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (c &CircleShape) move(offset system.Vector2f) {
 	unsafe {
-		C.sfCircleShape_move(&C.sfCircleShape(c), C.sfVector2f(offset))
+		C.sfCircleShape_move(&C.sfCircleShape(c), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -163,7 +163,7 @@ pub fn (c &CircleShape) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (c &CircleShape) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfCircleShape_scale(&C.sfCircleShape(c), C.sfVector2f(factors))
+		C.sfCircleShape_scale(&C.sfCircleShape(c), *&C.sfVector2f(&factors))
 	}
 }
 
@@ -200,7 +200,7 @@ pub fn (c &CircleShape) set_texture(texture &Texture, resetRect bool) {
 // By default, the texture rect covers the entire texture.
 pub fn (c &CircleShape) set_texture_rect(rect IntRect) {
 	unsafe {
-		C.sfCircleShape_setTextureRect(&C.sfCircleShape(c), C.sfIntRect(rect))
+		C.sfCircleShape_setTextureRect(&C.sfCircleShape(c), *&C.sfIntRect(&rect))
 	}
 }
 
@@ -213,7 +213,7 @@ pub fn (c &CircleShape) set_texture_rect(rect IntRect) {
 // By default, the shape's fill color is opaque white.
 pub fn (c &CircleShape) set_fill_color(color Color) {
 	unsafe {
-		C.sfCircleShape_setFillColor(&C.sfCircleShape(c), C.sfColor(color))
+		C.sfCircleShape_setFillColor(&C.sfCircleShape(c), *&C.sfColor(&color))
 	}
 }
 
@@ -222,7 +222,7 @@ pub fn (c &CircleShape) set_fill_color(color Color) {
 // By default, the shape's outline color is opaque white.
 pub fn (c &CircleShape) set_outline_color(color Color) {
 	unsafe {
-		C.sfCircleShape_setOutlineColor(&C.sfCircleShape(c), C.sfColor(color))
+		C.sfCircleShape_setOutlineColor(&C.sfCircleShape(c), *&C.sfColor(&color))
 	}
 }
 
@@ -240,7 +240,7 @@ pub fn (c &CircleShape) set_outline_thickness(thickness f32) {
 // If the shape has no source texture, a NULL pointer is returned.
 // The returned pointer is const, which means that you can't
 // modify the texture when you retrieve it with this function.
-pub fn (c &CircleShape) get_texture() ?&Texture {
+pub fn (c &CircleShape) get_texture() !&Texture {
 	unsafe {
 		result := &Texture(C.sfCircleShape_getTexture(&C.sfCircleShape(c)))
 		if voidptr(result) == C.NULL {
@@ -289,7 +289,7 @@ pub fn (c &CircleShape) get_point_count() u64 {
 // The result is undefined if index is out of the valid range.
 pub fn (c &CircleShape) get_point(index u64) system.Vector2f {
 	unsafe {
-		return system.Vector2f(C.sfCircleShape_getPoint(&C.sfCircleShape(c), size_t(index)))
+		return system.Vector2f(C.sfCircleShape_getPoint(&C.sfCircleShape(c), usize(index)))
 	}
 }
 
@@ -310,7 +310,7 @@ pub fn (c &CircleShape) get_radius() f32 {
 // set_point_count: set the number of points of a circle
 pub fn (c &CircleShape) set_point_count(count u64) {
 	unsafe {
-		C.sfCircleShape_setPointCount(&C.sfCircleShape(c), size_t(count))
+		C.sfCircleShape_setPointCount(&C.sfCircleShape(c), usize(count))
 	}
 }
 

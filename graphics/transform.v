@@ -56,7 +56,7 @@ pub fn (t &Transform) get_inverse() Transform {
 // transform_point: apply a transform to a 2D point
 pub fn (t &Transform) transform_point(point system.Vector2f) system.Vector2f {
 	unsafe {
-		return system.Vector2f(C.sfTransform_transformPoint(&C.sfTransform(t), C.sfVector2f(point)))
+		return system.Vector2f(C.sfTransform_transformPoint(&C.sfTransform(t), *&C.sfVector2f(&point)))
 	}
 }
 
@@ -68,7 +68,7 @@ pub fn (t &Transform) transform_point(point system.Vector2f) system.Vector2f {
 // is returned.
 pub fn (t &Transform) transform_rect(rectangle FloatRect) FloatRect {
 	unsafe {
-		return FloatRect(C.sfTransform_transformRect(&C.sfTransform(t), C.sfFloatRect(rectangle)))
+		return FloatRect(C.sfTransform_transformRect(&C.sfTransform(t), *&C.sfFloatRect(&rectangle)))
 	}
 }
 

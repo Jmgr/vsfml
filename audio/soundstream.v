@@ -42,10 +42,10 @@ pub type SoundStreamGetDataCallback = fn (&C.sfSoundStreamChunk, voidptr) int //
 pub type SoundStreamSeekCallback = fn (C.sfTime, voidptr) // Type of the callback used to seek in a sound stream
 
 // new_sound_stream: create a new sound stream
-pub fn new_sound_stream(params SoundStreamNewSoundStreamParams) ?&SoundStream {
+pub fn new_sound_stream(params SoundStreamNewSoundStreamParams) !&SoundStream {
 	unsafe {
-		result := &SoundStream(C.sfSoundStream_create(C.sfSoundStreamGetDataCallback(params.on_get_data),
-			C.sfSoundStreamSeekCallback(params.on_seek), u32(params.channel_count), u32(params.sample_rate),
+		result := &SoundStream(C.sfSoundStream_create(*&C.sfSoundStreamGetDataCallback(&params.on_get_data),
+			*&C.sfSoundStreamSeekCallback(&params.on_seek), u32(params.channel_count), u32(params.sample_rate),
 			voidptr(params.user_data)))
 		if voidptr(result) == C.NULL {
 			return error('new_sound_stream failed with on_get_data=$params.on_get_data on_seek=$params.on_seek channel_count=$params.channel_count sample_rate=$params.sample_rate')
@@ -137,7 +137,7 @@ pub fn (s &SoundStream) set_volume(volume f32) {
 // The default position of a stream is (0, 0, 0).
 pub fn (s &SoundStream) set_position(position system.Vector3f) {
 	unsafe {
-		C.sfSoundStream_setPosition(&C.sfSoundStream(s), C.sfVector3f(position))
+		C.sfSoundStream_setPosition(&C.sfSoundStream(s), *&C.sfVector3f(&position))
 	}
 }
 
@@ -186,7 +186,7 @@ pub fn (s &SoundStream) set_attenuation(attenuation f32) {
 // either paused or playing.
 pub fn (s &SoundStream) set_playing_offset(timeOffset system.Time) {
 	unsafe {
-		C.sfSoundStream_setPlayingOffset(&C.sfSoundStream(s), C.sfTime(timeOffset))
+		C.sfSoundStream_setPlayingOffset(&C.sfSoundStream(s), *&C.sfTime(&timeOffset))
 	}
 }
 

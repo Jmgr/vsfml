@@ -17,15 +17,15 @@ fn C.sfSoundRecorder_setChannelCount(&C.sfSoundRecorder, u32)
 
 pub type SoundRecorderStartCallback = fn (voidptr) int // Type of the callback used when starting a capture
 
-pub type SoundRecorderProcessCallback = fn (&i16, size_t, voidptr) int // Type of the callback used to process audio data
+pub type SoundRecorderProcessCallback = fn (&i16, usize, voidptr) int // Type of the callback used to process audio data
 
 pub type SoundRecorderStopCallback = fn (voidptr) // Type of the callback used when stopping a capture
 
 // new_sound_recorder: construct a new sound recorder from callback functions
-pub fn new_sound_recorder(params SoundRecorderNewSoundRecorderParams) ?&SoundRecorder {
+pub fn new_sound_recorder(params SoundRecorderNewSoundRecorderParams) !&SoundRecorder {
 	unsafe {
-		result := &SoundRecorder(C.sfSoundRecorder_create(C.sfSoundRecorderStartCallback(params.on_start),
-			C.sfSoundRecorderProcessCallback(params.on_process), C.sfSoundRecorderStopCallback(params.on_stop),
+		result := &SoundRecorder(C.sfSoundRecorder_create(*&C.sfSoundRecorderStartCallback(&params.on_start),
+			*&C.sfSoundRecorderProcessCallback(&params.on_process), *&C.sfSoundRecorderStopCallback(&params.on_stop),
 			voidptr(params.user_data)))
 		if voidptr(result) == C.NULL {
 			return error('new_sound_recorder failed with on_start=$params.on_start on_process=$params.on_process on_stop=$params.on_stop')
@@ -37,10 +37,10 @@ pub fn new_sound_recorder(params SoundRecorderNewSoundRecorderParams) ?&SoundRec
 // SoundRecorderNewSoundRecorderParams: parameters for new_sound_recorder
 pub struct SoundRecorderNewSoundRecorderParams {
 pub:
-	on_start   SoundRecorderStartCallback // callback function which will be called when a new capture starts (can be NULL)
+	on_start   SoundRecorderStartCallback = unsafe { nil } // callback function which will be called when a new capture starts (can be NULL)
 	on_process SoundRecorderProcessCallback [required] // callback function which will be called each time there's audio data to process
-	on_stop    SoundRecorderStopCallback // callback function which will be called when the current capture stops (can be NULL)
-	user_data  voidptr // data to pass to the callback function (can be NULL)
+	on_stop    SoundRecorderStopCallback = unsafe { nil } // callback function which will be called when the current capture stops (can be NULL)
+	user_data  voidptr = unsafe { nil } // data to pass to the callback function (can be NULL)
 }
 
 // free: destroy a sound recorder
@@ -91,7 +91,7 @@ pub fn soundrecorder_is_available() bool {
 // The default processing interval is 100 ms.
 pub fn (s &SoundRecorder) set_processing_interval(interval system.Time) {
 	unsafe {
-		C.sfSoundRecorder_setProcessingInterval(&C.sfSoundRecorder(s), C.sfTime(interval))
+		C.sfSoundRecorder_setProcessingInterval(&C.sfSoundRecorder(s), *&C.sfTime(&interval))
 	}
 }
 

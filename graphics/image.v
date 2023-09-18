@@ -8,7 +8,7 @@ fn C.sfImage_create(u32, u32) &C.sfImage
 fn C.sfImage_createFromColor(u32, u32, C.sfColor) &C.sfImage
 fn C.sfImage_createFromPixels(u32, u32, &byte) &C.sfImage
 fn C.sfImage_createFromFile(&char) &C.sfImage
-fn C.sfImage_createFromMemory(voidptr, size_t) &C.sfImage
+fn C.sfImage_createFromMemory(voidptr, usize) &C.sfImage
 fn C.sfImage_createFromStream(&C.sfInputStream) &C.sfImage
 fn C.sfImage_copy(&C.sfImage) &C.sfImage
 fn C.sfImage_destroy(&C.sfImage)
@@ -24,7 +24,7 @@ fn C.sfImage_flipVertically(&C.sfImage)
 
 // new_image: create an image
 // This image is filled with black pixels.
-pub fn new_image(params ImageNewImageParams) ?&Image {
+pub fn new_image(params ImageNewImageParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_create(u32(params.width), u32(params.height)))
 		if voidptr(result) == C.NULL {
@@ -42,10 +42,10 @@ pub:
 }
 
 // new_image_from_color: create an image and fill it with a unique color
-pub fn new_image_from_color(params ImageNewImageFromColorParams) ?&Image {
+pub fn new_image_from_color(params ImageNewImageFromColorParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_createFromColor(u32(params.width), u32(params.height),
-			C.sfColor(params.color)))
+			*&C.sfColor(&params.color)))
 		if voidptr(result) == C.NULL {
 			return error('new_image_from_color failed with width=$params.width height=$params.height color=$params.color')
 		}
@@ -66,7 +66,7 @@ pub:
 // and have the given width and height. If not, this is
 // an undefined behaviour.
 // If pixels is null, an empty image is created.
-pub fn new_image_from_pixels(params ImageNewImageFromPixelsParams) ?&Image {
+pub fn new_image_from_pixels(params ImageNewImageFromPixelsParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_createFromPixels(u32(params.width), u32(params.height),
 			&byte(params.pixels)))
@@ -90,7 +90,7 @@ pub:
 // psd, hdr and pic. Some format options are not supported,
 // like progressive jpeg.
 // If this function fails, the image is left unchanged.
-pub fn new_image_from_file(params ImageNewImageFromFileParams) ?&Image {
+pub fn new_image_from_file(params ImageNewImageFromFileParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
@@ -111,9 +111,9 @@ pub:
 // psd, hdr and pic. Some format options are not supported,
 // like progressive jpeg.
 // If this function fails, the image is left unchanged.
-pub fn new_image_from_memory(params ImageNewImageFromMemoryParams) ?&Image {
+pub fn new_image_from_memory(params ImageNewImageFromMemoryParams) !&Image {
 	unsafe {
-		result := &Image(C.sfImage_createFromMemory(voidptr(params.data), size_t(params.size)))
+		result := &Image(C.sfImage_createFromMemory(voidptr(params.data), usize(params.size)))
 		if voidptr(result) == C.NULL {
 			return error('new_image_from_memory failed with size=$params.size')
 		}
@@ -133,7 +133,7 @@ pub:
 // psd, hdr and pic. Some format options are not supported,
 // like progressive jpeg.
 // If this function fails, the image is left unchanged.
-pub fn new_image_from_stream(params ImageNewImageFromStreamParams) ?&Image {
+pub fn new_image_from_stream(params ImageNewImageFromStreamParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_createFromStream(&C.sfInputStream(params.stream)))
 		if voidptr(result) == C.NULL {
@@ -150,7 +150,7 @@ pub:
 }
 
 // copy: copy an existing image
-pub fn (i &Image) copy() ?&Image {
+pub fn (i &Image) copy() !&Image {
 	unsafe {
 		result := &Image(C.sfImage_copy(&C.sfImage(i)))
 		if voidptr(result) == C.NULL {
@@ -192,7 +192,7 @@ pub fn (i &Image) get_size() system.Vector2u {
 // become transparent.
 pub fn new_void_mask_from_color(params ImageNewVoidMaskFromColorParams) {
 	unsafe {
-		C.sfImage_createMaskFromColor(&C.sfImage(params.image), C.sfColor(params.color),
+		C.sfImage_createMaskFromColor(&C.sfImage(params.image), *&C.sfColor(&params.color),
 			byte(params.alpha))
 	}
 }
@@ -217,7 +217,7 @@ pub:
 pub fn (i &Image) copy_image(params ImageCopyImageParams) {
 	unsafe {
 		C.sfImage_copyImage(&C.sfImage(i), &C.sfImage(params.source), u32(params.dest_x),
-			u32(params.dest_y), C.sfIntRect(params.source_rect), int(params.apply_alpha))
+			u32(params.dest_y), *&C.sfIntRect(&params.source_rect), int(params.apply_alpha))
 	}
 }
 
@@ -237,7 +237,7 @@ pub:
 // an undefined behaviour.
 pub fn (i &Image) set_pixel(params ImageSetPixelParams) {
 	unsafe {
-		C.sfImage_setPixel(&C.sfImage(i), u32(params.x), u32(params.y), C.sfColor(params.color))
+		C.sfImage_setPixel(&C.sfImage(i), u32(params.x), u32(params.y), *&C.sfColor(&params.color))
 	}
 }
 
@@ -266,9 +266,9 @@ pub fn (i &Image) get_pixel(x u32, y u32) Color {
 // Warning: the returned pointer may become invalid if you
 // modify the image, so you should never store it for too long.
 // If the image is empty, a null pointer is returned.
-pub fn (i &Image) get_pixels_ptr() ?&byte {
+pub fn (i &Image) get_pixels_ptr() !&u8 {
 	unsafe {
-		result := &byte(C.sfImage_getPixelsPtr(&C.sfImage(i)))
+		result := &u8(C.sfImage_getPixelsPtr(&C.sfImage(i)))
 		if voidptr(result) == C.NULL {
 			return error('get_pixels_ptr failed')
 		}

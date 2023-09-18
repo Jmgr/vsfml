@@ -9,7 +9,7 @@ fn C.sfClock_getElapsedTime(&C.sfClock) C.sfTime
 fn C.sfClock_restart(&C.sfClock) C.sfTime
 
 // new_clock: create a new clock and start it
-pub fn new_clock() ?&Clock {
+pub fn new_clock() !&Clock {
 	unsafe {
 		result := &Clock(C.sfClock_create())
 		if voidptr(result) == C.NULL {
@@ -20,7 +20,7 @@ pub fn new_clock() ?&Clock {
 }
 
 // copy: create a new clock by copying an existing one
-pub fn (c &Clock) copy() ?&Clock {
+pub fn (c &Clock) copy() !&Clock {
 	unsafe {
 		result := &Clock(C.sfClock_copy(&C.sfClock(c)))
 		if voidptr(result) == C.NULL {

@@ -114,7 +114,7 @@ fn C.sfKeyboard_setVirtualKeyboardVisible(int)
 // keyboard_is_key_pressed: check if a key is pressed
 pub fn keyboard_is_key_pressed(key KeyCode) bool {
 	unsafe {
-		return C.sfKeyboard_isKeyPressed(C.sfKeyCode(key)) != 0
+		return C.sfKeyboard_isKeyPressed(*&C.sfKeyCode(&key)) != 0
 	}
 }
 

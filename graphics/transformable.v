@@ -22,7 +22,7 @@ fn C.sfTransformable_getTransform(&C.sfTransformable) C.sfTransform
 fn C.sfTransformable_getInverseTransform(&C.sfTransformable) C.sfTransform
 
 // new_transformable: create a new transformable
-pub fn new_transformable() ?&Transformable {
+pub fn new_transformable() !&Transformable {
 	unsafe {
 		result := &Transformable(C.sfTransformable_create())
 		if voidptr(result) == C.NULL {
@@ -33,7 +33,7 @@ pub fn new_transformable() ?&Transformable {
 }
 
 // copy: copy an existing transformable
-pub fn (t &Transformable) copy() ?&Transformable {
+pub fn (t &Transformable) copy() !&Transformable {
 	unsafe {
 		result := &Transformable(C.sfTransformable_copy(&C.sfTransformable(t)))
 		if voidptr(result) == C.NULL {
@@ -57,7 +57,7 @@ pub fn (t &Transformable) free() {
 // The default position of a transformable Transformable object is (0, 0).
 pub fn (t &Transformable) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfTransformable_setPosition(&C.sfTransformable(t), C.sfVector2f(position))
+		C.sfTransformable_setPosition(&C.sfTransformable(t), *&C.sfVector2f(&position))
 	}
 }
 
@@ -77,7 +77,7 @@ pub fn (t &Transformable) set_rotation(angle f32) {
 // The default scale of a transformable Transformable object is (1, 1).
 pub fn (t &Transformable) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfTransformable_setScale(&C.sfTransformable(t), C.sfVector2f(scale))
+		C.sfTransformable_setScale(&C.sfTransformable(t), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -90,7 +90,7 @@ pub fn (t &Transformable) set_scale(scale system.Vector2f) {
 // The default origin of a transformable Transformable object is (0, 0).
 pub fn (t &Transformable) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfTransformable_setOrigin(&C.sfTransformable(t), C.sfVector2f(origin))
+		C.sfTransformable_setOrigin(&C.sfTransformable(t), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -128,7 +128,7 @@ pub fn (t &Transformable) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (t &Transformable) move(offset system.Vector2f) {
 	unsafe {
-		C.sfTransformable_move(&C.sfTransformable(t), C.sfVector2f(offset))
+		C.sfTransformable_move(&C.sfTransformable(t), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -146,7 +146,7 @@ pub fn (t &Transformable) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (t &Transformable) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfTransformable_scale(&C.sfTransformable(t), C.sfVector2f(factors))
+		C.sfTransformable_scale(&C.sfTransformable(t), *&C.sfVector2f(&factors))
 	}
 }
 

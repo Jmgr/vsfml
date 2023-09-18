@@ -57,7 +57,7 @@ fn C.sfHttp_setHost(&C.sfHttp, &char, u16)
 fn C.sfHttp_sendRequest(&C.sfHttp, &C.sfHttpRequest, C.sfTime) &C.sfHttpResponse
 
 // new_http_request: create a new HTTP request
-pub fn new_http_request() ?&HttpRequest {
+pub fn new_http_request() !&HttpRequest {
 	unsafe {
 		result := &HttpRequest(C.sfHttpRequest_create())
 		if voidptr(result) == C.NULL {
@@ -93,7 +93,7 @@ pub fn (h &HttpRequest) set_field(field string, value string) {
 // The method is HttpGet by default.
 pub fn (h &HttpRequest) set_method(method HttpMethod) {
 	unsafe {
-		C.sfHttpRequest_setMethod(&C.sfHttpRequest(h), C.sfHttpMethod(method))
+		C.sfHttpRequest_setMethod(&C.sfHttpRequest(h), *&C.sfHttpMethod(&method))
 	}
 }
 
@@ -163,7 +163,7 @@ pub fn (h &HttpResponse) get_body() string {
 }
 
 // new_http: create a new Http object
-pub fn new_http() ?&Http {
+pub fn new_http() !&Http {
 	unsafe {
 		result := &Http(C.sfHttp_create())
 		if voidptr(result) == C.NULL {
@@ -204,10 +204,10 @@ pub fn (h &Http) set_host(host string, port u16) {
 // application, or use a timeout to limit the time to wait. A value
 // of 0 means that the client will use the system defaut timeout
 // (which is usually pretty long).
-pub fn (h &Http) send_request(request &HttpRequest, timeout system.Time) ?&HttpResponse {
+pub fn (h &Http) send_request(request &HttpRequest, timeout system.Time) !&HttpResponse {
 	unsafe {
 		result := &HttpResponse(C.sfHttp_sendRequest(&C.sfHttp(h), &C.sfHttpRequest(request),
-			C.sfTime(timeout)))
+			*&C.sfTime(&timeout)))
 		if voidptr(result) == C.NULL {
 			return error('send_request failed with timeout=$timeout')
 		}

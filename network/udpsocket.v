@@ -8,13 +8,13 @@ fn C.sfUdpSocket_setBlocking(&C.sfUdpSocket, int)
 fn C.sfUdpSocket_isBlocking(&C.sfUdpSocket) int
 fn C.sfUdpSocket_bind(&C.sfUdpSocket, u16, C.sfIpAddress) C.sfSocketStatus
 fn C.sfUdpSocket_unbind(&C.sfUdpSocket)
-fn C.sfUdpSocket_send(&C.sfUdpSocket, voidptr, size_t, C.sfIpAddress, u16) C.sfSocketStatus
-fn C.sfUdpSocket_receive(&C.sfUdpSocket, voidptr, size_t, &size_t, &C.sfIpAddress, &u16) C.sfSocketStatus
+fn C.sfUdpSocket_send(&C.sfUdpSocket, voidptr, usize, C.sfIpAddress, u16) C.sfSocketStatus
+fn C.sfUdpSocket_receive(&C.sfUdpSocket, voidptr, usize, &usize, &C.sfIpAddress, &u16) C.sfSocketStatus
 fn C.sfUdpSocket_sendPacket(&C.sfUdpSocket, &C.sfPacket, C.sfIpAddress, u16) C.sfSocketStatus
 fn C.sfUdpSocket_receivePacket(&C.sfUdpSocket, &C.sfPacket, &C.sfIpAddress, &u16) C.sfSocketStatus
 
 // new_udp_socket: create a new UDP socket
-pub fn new_udp_socket() ?&UdpSocket {
+pub fn new_udp_socket() !&UdpSocket {
 	unsafe {
 		result := &UdpSocket(C.sfUdpSocket_create())
 		if voidptr(result) == C.NULL {
@@ -63,7 +63,7 @@ pub fn (u &UdpSocket) is_blocking() bool {
 // If there is no specific address to listen to, pass Any
 pub fn (u &UdpSocket) bind(port u16, address IpAddress) SocketStatus {
 	unsafe {
-		return SocketStatus(C.sfUdpSocket_bind(&C.sfUdpSocket(u), u16(port), C.sfIpAddress(address)))
+		return SocketStatus(C.sfUdpSocket_bind(&C.sfUdpSocket(u), u16(port), *&C.sfIpAddress(&address)))
 	}
 }
 
@@ -84,7 +84,7 @@ pub fn (u &UdpSocket) unbind() {
 pub fn (u &UdpSocket) send(params UdpSocketSendParams) SocketStatus {
 	unsafe {
 		return SocketStatus(C.sfUdpSocket_send(&C.sfUdpSocket(u), voidptr(params.data),
-			size_t(params.size), C.sfIpAddress(params.remote_address), u16(params.remote_port)))
+			usize(params.size), *&C.sfIpAddress(&params.remote_address), u16(params.remote_port)))
 	}
 }
 
@@ -107,7 +107,7 @@ pub:
 pub fn (u &UdpSocket) receive(params UdpSocketReceiveParams) SocketStatus {
 	unsafe {
 		return SocketStatus(C.sfUdpSocket_receive(&C.sfUdpSocket(u), voidptr(params.data),
-			size_t(params.size), &size_t(params.received), &C.sfIpAddress(params.remote_address),
+			usize(params.size), &usize(params.received), &C.sfIpAddress(params.remote_address),
 			&u16(params.remote_port)))
 	}
 }
@@ -129,7 +129,7 @@ pub:
 pub fn (u &UdpSocket) send_packet(params UdpSocketSendPacketParams) SocketStatus {
 	unsafe {
 		return SocketStatus(C.sfUdpSocket_sendPacket(&C.sfUdpSocket(u), &C.sfPacket(params.packet),
-			C.sfIpAddress(params.remote_address), u16(params.remote_port)))
+			*&C.sfIpAddress(&params.remote_address), u16(params.remote_port)))
 	}
 }
 

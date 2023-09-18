@@ -11,5 +11,5 @@ pub fn (r &RenderWindow) poll_event() ?window.Event {
 	if C.pollEventRenderWindow(r, &evt_type, &evt) == 0 {
 		return none
 	}
-	return window.process_event(window.EventTypeEnum(evt_type), evt)
+	return window.process_event(unsafe { window.EventTypeEnum(evt_type) }, evt)
 }

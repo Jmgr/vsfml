@@ -30,15 +30,15 @@ fn C.sfRectangleShape_getTextureRect(&C.sfRectangleShape) C.sfIntRect
 fn C.sfRectangleShape_getFillColor(&C.sfRectangleShape) C.sfColor
 fn C.sfRectangleShape_getOutlineColor(&C.sfRectangleShape) C.sfColor
 fn C.sfRectangleShape_getOutlineThickness(&C.sfRectangleShape) f32
-fn C.sfRectangleShape_getPointCount(&C.sfRectangleShape) size_t
-fn C.sfRectangleShape_getPoint(&C.sfRectangleShape, size_t) C.sfVector2f
+fn C.sfRectangleShape_getPointCount(&C.sfRectangleShape) usize
+fn C.sfRectangleShape_getPoint(&C.sfRectangleShape, usize) C.sfVector2f
 fn C.sfRectangleShape_setSize(&C.sfRectangleShape, C.sfVector2f)
 fn C.sfRectangleShape_getSize(&C.sfRectangleShape) C.sfVector2f
 fn C.sfRectangleShape_getLocalBounds(&C.sfRectangleShape) C.sfFloatRect
 fn C.sfRectangleShape_getGlobalBounds(&C.sfRectangleShape) C.sfFloatRect
 
 // new_rectangle_shape: create a new rectangle shape
-pub fn new_rectangle_shape() ?&RectangleShape {
+pub fn new_rectangle_shape() !&RectangleShape {
 	unsafe {
 		result := &RectangleShape(C.sfRectangleShape_create())
 		if voidptr(result) == C.NULL {
@@ -49,7 +49,7 @@ pub fn new_rectangle_shape() ?&RectangleShape {
 }
 
 // copy: copy an existing rectangle shape
-pub fn (r &RectangleShape) copy() ?&RectangleShape {
+pub fn (r &RectangleShape) copy() !&RectangleShape {
 	unsafe {
 		result := &RectangleShape(C.sfRectangleShape_copy(&C.sfRectangleShape(r)))
 		if voidptr(result) == C.NULL {
@@ -73,7 +73,7 @@ pub fn (r &RectangleShape) free() {
 // The default position of a circle Shape object is (0, 0).
 pub fn (r &RectangleShape) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfRectangleShape_setPosition(&C.sfRectangleShape(r), C.sfVector2f(position))
+		C.sfRectangleShape_setPosition(&C.sfRectangleShape(r), *&C.sfVector2f(&position))
 	}
 }
 
@@ -93,7 +93,7 @@ pub fn (r &RectangleShape) set_rotation(angle f32) {
 // The default scale of a circle Shape object is (1, 1).
 pub fn (r &RectangleShape) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfRectangleShape_setScale(&C.sfRectangleShape(r), C.sfVector2f(scale))
+		C.sfRectangleShape_setScale(&C.sfRectangleShape(r), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -106,7 +106,7 @@ pub fn (r &RectangleShape) set_scale(scale system.Vector2f) {
 // The default origin of a circle Shape object is (0, 0).
 pub fn (r &RectangleShape) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfRectangleShape_setOrigin(&C.sfRectangleShape(r), C.sfVector2f(origin))
+		C.sfRectangleShape_setOrigin(&C.sfRectangleShape(r), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -144,7 +144,7 @@ pub fn (r &RectangleShape) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (r &RectangleShape) move(offset system.Vector2f) {
 	unsafe {
-		C.sfRectangleShape_move(&C.sfRectangleShape(r), C.sfVector2f(offset))
+		C.sfRectangleShape_move(&C.sfRectangleShape(r), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -162,7 +162,7 @@ pub fn (r &RectangleShape) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (r &RectangleShape) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfRectangleShape_scale(&C.sfRectangleShape(r), C.sfVector2f(factors))
+		C.sfRectangleShape_scale(&C.sfRectangleShape(r), *&C.sfVector2f(&factors))
 	}
 }
 
@@ -200,7 +200,7 @@ pub fn (r &RectangleShape) set_texture(texture &Texture, resetRect bool) {
 // By default, the texture rect covers the entire texture.
 pub fn (r &RectangleShape) set_texture_rect(rect IntRect) {
 	unsafe {
-		C.sfRectangleShape_setTextureRect(&C.sfRectangleShape(r), C.sfIntRect(rect))
+		C.sfRectangleShape_setTextureRect(&C.sfRectangleShape(r), *&C.sfIntRect(&rect))
 	}
 }
 
@@ -213,7 +213,7 @@ pub fn (r &RectangleShape) set_texture_rect(rect IntRect) {
 // By default, the shape's fill color is opaque white.
 pub fn (r &RectangleShape) set_fill_color(color Color) {
 	unsafe {
-		C.sfRectangleShape_setFillColor(&C.sfRectangleShape(r), C.sfColor(color))
+		C.sfRectangleShape_setFillColor(&C.sfRectangleShape(r), *&C.sfColor(&color))
 	}
 }
 
@@ -222,7 +222,7 @@ pub fn (r &RectangleShape) set_fill_color(color Color) {
 // By default, the shape's outline color is opaque white.
 pub fn (r &RectangleShape) set_outline_color(color Color) {
 	unsafe {
-		C.sfRectangleShape_setOutlineColor(&C.sfRectangleShape(r), C.sfColor(color))
+		C.sfRectangleShape_setOutlineColor(&C.sfRectangleShape(r), *&C.sfColor(&color))
 	}
 }
 
@@ -240,7 +240,7 @@ pub fn (r &RectangleShape) set_outline_thickness(thickness f32) {
 // If the shape has no source texture, a NULL pointer is returned.
 // The returned pointer is const, which means that you can't
 // modify the texture when you retrieve it with this function.
-pub fn (r &RectangleShape) get_texture() ?&Texture {
+pub fn (r &RectangleShape) get_texture() !&Texture {
 	unsafe {
 		result := &Texture(C.sfRectangleShape_getTexture(&C.sfRectangleShape(r)))
 		if voidptr(result) == C.NULL {
@@ -289,14 +289,14 @@ pub fn (r &RectangleShape) get_point_count() u64 {
 // The result is undefined if index is out of the valid range.
 pub fn (r &RectangleShape) get_point(index u64) system.Vector2f {
 	unsafe {
-		return system.Vector2f(C.sfRectangleShape_getPoint(&C.sfRectangleShape(r), size_t(index)))
+		return system.Vector2f(C.sfRectangleShape_getPoint(&C.sfRectangleShape(r), usize(index)))
 	}
 }
 
 // set_size: set the size of a rectangle shape
 pub fn (r &RectangleShape) set_size(size system.Vector2f) {
 	unsafe {
-		C.sfRectangleShape_setSize(&C.sfRectangleShape(r), C.sfVector2f(size))
+		C.sfRectangleShape_setSize(&C.sfRectangleShape(r), *&C.sfVector2f(&size))
 	}
 }
 

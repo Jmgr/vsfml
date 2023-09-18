@@ -5,7 +5,7 @@ import system
 #include <SFML/Graphics/Font.h>
 
 fn C.sfFont_createFromFile(&char) &C.sfFont
-fn C.sfFont_createFromMemory(voidptr, size_t) &C.sfFont
+fn C.sfFont_createFromMemory(voidptr, usize) &C.sfFont
 fn C.sfFont_createFromStream(&C.sfInputStream) &C.sfFont
 fn C.sfFont_copy(&C.sfFont) &C.sfFont
 fn C.sfFont_destroy(&C.sfFont)
@@ -18,7 +18,7 @@ fn C.sfFont_getTexture(&C.sfFont, u32) &C.sfTexture
 fn C.sfFont_getInfo(&C.sfFont) C.sfFontInfo
 
 // new_font_from_file: create a new font from a file
-pub fn new_font_from_file(params FontNewFontFromFileParams) ?&Font {
+pub fn new_font_from_file(params FontNewFontFromFileParams) !&Font {
 	unsafe {
 		result := &Font(C.sfFont_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
@@ -35,9 +35,9 @@ pub:
 }
 
 // new_font_from_memory: create a new image font a file in memory
-pub fn new_font_from_memory(params FontNewFontFromMemoryParams) ?&Font {
+pub fn new_font_from_memory(params FontNewFontFromMemoryParams) !&Font {
 	unsafe {
-		result := &Font(C.sfFont_createFromMemory(voidptr(params.data), size_t(params.size_in_bytes)))
+		result := &Font(C.sfFont_createFromMemory(voidptr(params.data), usize(params.size_in_bytes)))
 		if voidptr(result) == C.NULL {
 			return error('new_font_from_memory failed with size_in_bytes=$params.size_in_bytes')
 		}
@@ -53,7 +53,7 @@ pub:
 }
 
 // new_font_from_stream: create a new image font a custom stream
-pub fn new_font_from_stream(params FontNewFontFromStreamParams) ?&Font {
+pub fn new_font_from_stream(params FontNewFontFromStreamParams) !&Font {
 	unsafe {
 		result := &Font(C.sfFont_createFromStream(&C.sfInputStream(params.stream)))
 		if voidptr(result) == C.NULL {
@@ -70,7 +70,7 @@ pub:
 }
 
 // copy: copy an existing font
-pub fn (f &Font) copy() ?&Font {
+pub fn (f &Font) copy() !&Font {
 	unsafe {
 		result := &Font(C.sfFont_copy(&C.sfFont(f)))
 		if voidptr(result) == C.NULL {
@@ -146,7 +146,7 @@ pub fn (f &Font) get_underline_thickness(characterSize u32) f32 {
 }
 
 // get_texture: get the texture containing the glyphs of a given size in a font
-pub fn (f &Font) get_texture(characterSize u32) ?&Texture {
+pub fn (f &Font) get_texture(characterSize u32) !&Texture {
 	unsafe {
 		result := &Texture(C.sfFont_getTexture(&C.sfFont(f), u32(characterSize)))
 		if voidptr(result) == C.NULL {

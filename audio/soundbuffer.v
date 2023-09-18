@@ -5,7 +5,7 @@ import system
 #include <SFML/Audio/SoundBuffer.h>
 
 fn C.sfSoundBuffer_createFromFile(&char) &C.sfSoundBuffer
-fn C.sfSoundBuffer_createFromMemory(voidptr, size_t) &C.sfSoundBuffer
+fn C.sfSoundBuffer_createFromMemory(voidptr, usize) &C.sfSoundBuffer
 fn C.sfSoundBuffer_createFromStream(&C.sfInputStream) &C.sfSoundBuffer
 fn C.sfSoundBuffer_createFromSamples(&i16, u64, u32, u32) &C.sfSoundBuffer
 fn C.sfSoundBuffer_copy(&C.sfSoundBuffer) &C.sfSoundBuffer
@@ -19,7 +19,7 @@ fn C.sfSoundBuffer_getDuration(&C.sfSoundBuffer) C.sfTime
 // Here is a complete list of all the supported audio formats:
 // ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 // w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-pub fn new_sound_buffer_from_file(params SoundBufferNewSoundBufferFromFileParams) ?&SoundBuffer {
+pub fn new_sound_buffer_from_file(params SoundBufferNewSoundBufferFromFileParams) !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBuffer_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
@@ -39,10 +39,10 @@ pub:
 // Here is a complete list of all the supported audio formats:
 // ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 // w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-pub fn new_sound_buffer_from_memory(params SoundBufferNewSoundBufferFromMemoryParams) ?&SoundBuffer {
+pub fn new_sound_buffer_from_memory(params SoundBufferNewSoundBufferFromMemoryParams) !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBuffer_createFromMemory(voidptr(params.data),
-			size_t(params.size_in_bytes)))
+			usize(params.size_in_bytes)))
 		if voidptr(result) == C.NULL {
 			return error('new_sound_buffer_from_memory failed with size_in_bytes=$params.size_in_bytes')
 		}
@@ -61,7 +61,7 @@ pub:
 // Here is a complete list of all the supported audio formats:
 // ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 // w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-pub fn new_sound_buffer_from_stream(params SoundBufferNewSoundBufferFromStreamParams) ?&SoundBuffer {
+pub fn new_sound_buffer_from_stream(params SoundBufferNewSoundBufferFromStreamParams) !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBuffer_createFromStream(&C.sfInputStream(params.stream)))
 		if voidptr(result) == C.NULL {
@@ -80,7 +80,7 @@ pub:
 // new_sound_buffer_from_samples: create a new sound buffer and load it from an array of samples in memory
 // The assumed format of the audio samples is 16 bits signed integer
 // (sfInt16).
-pub fn new_sound_buffer_from_samples(params SoundBufferNewSoundBufferFromSamplesParams) ?&SoundBuffer {
+pub fn new_sound_buffer_from_samples(params SoundBufferNewSoundBufferFromSamplesParams) !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBuffer_createFromSamples(&i16(params.samples),
 			u64(params.sample_count), u32(params.channel_count), u32(params.sample_rate)))
@@ -101,7 +101,7 @@ pub:
 }
 
 // copy: create a new sound buffer by copying an existing one
-pub fn (s &SoundBuffer) copy() ?&SoundBuffer {
+pub fn (s &SoundBuffer) copy() !&SoundBuffer {
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBuffer_copy(&C.sfSoundBuffer(s)))
 		if voidptr(result) == C.NULL {
@@ -133,7 +133,7 @@ pub fn (s &SoundBuffer) save_to_file(filename string) bool {
 // The format of the returned samples is 16 bits signed integer
 // (sfInt16). The total number of samples in this array
 // is given by the getSampleCount function.
-pub fn (s &SoundBuffer) get_samples() ?&i16 {
+pub fn (s &SoundBuffer) get_samples() !&i16 {
 	unsafe {
 		result := &i16(C.sfSoundBuffer_getSamples(&C.sfSoundBuffer(s)))
 		if voidptr(result) == C.NULL {

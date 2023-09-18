@@ -30,7 +30,7 @@ fn C.sfSprite_getLocalBounds(&C.sfSprite) C.sfFloatRect
 fn C.sfSprite_getGlobalBounds(&C.sfSprite) C.sfFloatRect
 
 // new_sprite: create a new sprite
-pub fn new_sprite() ?&Sprite {
+pub fn new_sprite() !&Sprite {
 	unsafe {
 		result := &Sprite(C.sfSprite_create())
 		if voidptr(result) == C.NULL {
@@ -41,7 +41,7 @@ pub fn new_sprite() ?&Sprite {
 }
 
 // copy: copy an existing sprite
-pub fn (s &Sprite) copy() ?&Sprite {
+pub fn (s &Sprite) copy() !&Sprite {
 	unsafe {
 		result := &Sprite(C.sfSprite_copy(&C.sfSprite(s)))
 		if voidptr(result) == C.NULL {
@@ -65,7 +65,7 @@ pub fn (s &Sprite) free() {
 // The default position of a sprite Sprite object is (0, 0).
 pub fn (s &Sprite) set_position(position system.Vector2f) {
 	unsafe {
-		C.sfSprite_setPosition(&C.sfSprite(s), C.sfVector2f(position))
+		C.sfSprite_setPosition(&C.sfSprite(s), *&C.sfVector2f(&position))
 	}
 }
 
@@ -85,7 +85,7 @@ pub fn (s &Sprite) set_rotation(angle f32) {
 // The default scale of a sprite Sprite object is (1, 1).
 pub fn (s &Sprite) set_scale(scale system.Vector2f) {
 	unsafe {
-		C.sfSprite_setScale(&C.sfSprite(s), C.sfVector2f(scale))
+		C.sfSprite_setScale(&C.sfSprite(s), *&C.sfVector2f(&scale))
 	}
 }
 
@@ -98,7 +98,7 @@ pub fn (s &Sprite) set_scale(scale system.Vector2f) {
 // The default origin of a sprite Sprite object is (0, 0).
 pub fn (s &Sprite) set_origin(origin system.Vector2f) {
 	unsafe {
-		C.sfSprite_setOrigin(&C.sfSprite(s), C.sfVector2f(origin))
+		C.sfSprite_setOrigin(&C.sfSprite(s), *&C.sfVector2f(&origin))
 	}
 }
 
@@ -136,7 +136,7 @@ pub fn (s &Sprite) get_origin() system.Vector2f {
 // unlike setPosition which overwrites it.
 pub fn (s &Sprite) move(offset system.Vector2f) {
 	unsafe {
-		C.sfSprite_move(&C.sfSprite(s), C.sfVector2f(offset))
+		C.sfSprite_move(&C.sfSprite(s), *&C.sfVector2f(&offset))
 	}
 }
 
@@ -154,7 +154,7 @@ pub fn (s &Sprite) rotate(angle f32) {
 // unlike setScale which overwrites it.
 pub fn (s &Sprite) scale(factors system.Vector2f) {
 	unsafe {
-		C.sfSprite_scale(&C.sfSprite(s), C.sfVector2f(factors))
+		C.sfSprite_scale(&C.sfSprite(s), *&C.sfVector2f(&factors))
 	}
 }
 
@@ -194,7 +194,7 @@ pub fn (s &Sprite) set_texture(texture &Texture, resetRect bool) {
 // By default, the texture rect covers the entire texture.
 pub fn (s &Sprite) set_texture_rect(rectangle IntRect) {
 	unsafe {
-		C.sfSprite_setTextureRect(&C.sfSprite(s), C.sfIntRect(rectangle))
+		C.sfSprite_setTextureRect(&C.sfSprite(s), *&C.sfIntRect(&rectangle))
 	}
 }
 
@@ -205,7 +205,7 @@ pub fn (s &Sprite) set_texture_rect(rectangle IntRect) {
 // By default, the sprite's color is opaque white.
 pub fn (s &Sprite) set_color(color Color) {
 	unsafe {
-		C.sfSprite_setColor(&C.sfSprite(s), C.sfColor(color))
+		C.sfSprite_setColor(&C.sfSprite(s), *&C.sfColor(&color))
 	}
 }
 
@@ -213,7 +213,7 @@ pub fn (s &Sprite) set_color(color Color) {
 // If the sprite has no source texture, a NULL pointer is returned.
 // The returned pointer is const, which means that you can't
 // modify the texture when you retrieve it with this function.
-pub fn (s &Sprite) get_texture() ?&Texture {
+pub fn (s &Sprite) get_texture() !&Texture {
 	unsafe {
 		result := &Texture(C.sfSprite_getTexture(&C.sfSprite(s)))
 		if voidptr(result) == C.NULL {

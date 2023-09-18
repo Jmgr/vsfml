@@ -20,7 +20,7 @@ fn C.sfSocketSelector_isTcpSocketReady(&C.sfSocketSelector, &C.sfTcpSocket) int
 fn C.sfSocketSelector_isUdpSocketReady(&C.sfSocketSelector, &C.sfUdpSocket) int
 
 // new_socket_selector: create a new selector
-pub fn new_socket_selector() ?&SocketSelector {
+pub fn new_socket_selector() !&SocketSelector {
 	unsafe {
 		result := &SocketSelector(C.sfSocketSelector_create())
 		if voidptr(result) == C.NULL {
@@ -31,7 +31,7 @@ pub fn new_socket_selector() ?&SocketSelector {
 }
 
 // copy: create a new socket selector by copying an existing one
-pub fn (s &SocketSelector) copy() ?&SocketSelector {
+pub fn (s &SocketSelector) copy() !&SocketSelector {
 	unsafe {
 		result := &SocketSelector(C.sfSocketSelector_copy(&C.sfSocketSelector(s)))
 		if voidptr(result) == C.NULL {
@@ -114,7 +114,7 @@ pub fn (s &SocketSelector) clear() {
 // is over, the function returns false.
 pub fn (s &SocketSelector) wait(timeout system.Time) bool {
 	unsafe {
-		return C.sfSocketSelector_wait(&C.sfSocketSelector(s), C.sfTime(timeout)) != 0
+		return C.sfSocketSelector_wait(&C.sfSocketSelector(s), *&C.sfTime(&timeout)) != 0
 	}
 }
 

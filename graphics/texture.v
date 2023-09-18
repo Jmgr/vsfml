@@ -7,14 +7,14 @@ import window
 
 fn C.sfTexture_create(u32, u32) &C.sfTexture
 fn C.sfTexture_createFromFile(&char, &C.sfIntRect) &C.sfTexture
-fn C.sfTexture_createFromMemory(voidptr, size_t, &C.sfIntRect) &C.sfTexture
+fn C.sfTexture_createFromMemory(voidptr, usize, &C.sfIntRect) &C.sfTexture
 fn C.sfTexture_createFromStream(&C.sfInputStream, &C.sfIntRect) &C.sfTexture
 fn C.sfTexture_createFromImage(&C.sfImage, &C.sfIntRect) &C.sfTexture
 fn C.sfTexture_copy(&C.sfTexture) &C.sfTexture
 fn C.sfTexture_destroy(&C.sfTexture)
 fn C.sfTexture_getSize(&C.sfTexture) C.sfVector2u
 fn C.sfTexture_copyToImage(&C.sfTexture) &C.sfImage
-fn C.sfTexture_updateFromPixels(&C.sfTexture, &byte, u32, u32, u32, u32)
+fn C.sfTexture_updateFromPixels(&C.sfTexture, &u8, u32, u32, u32, u32)
 fn C.sfTexture_updateFromTexture(&C.sfTexture, &C.sfTexture, u32, u32)
 fn C.sfTexture_updateFromImage(&C.sfTexture, &C.sfImage, u32, u32)
 fn C.sfTexture_updateFromWindow(&C.sfTexture, &C.sfWindow, u32, u32)
@@ -30,7 +30,7 @@ fn C.sfTexture_swap(&C.sfTexture, &C.sfTexture)
 fn C.sfTexture_bind(&C.sfTexture)
 
 // new_texture: create a new texture
-pub fn new_texture(params TextureNewTextureParams) ?&Texture {
+pub fn new_texture(params TextureNewTextureParams) !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_create(u32(params.width), u32(params.height)))
 		if voidptr(result) == C.NULL {
@@ -48,7 +48,7 @@ pub:
 }
 
 // new_texture_from_file: create a new texture from a file
-pub fn new_texture_from_file(params TextureNewTextureFromFileParams) ?&Texture {
+pub fn new_texture_from_file(params TextureNewTextureFromFileParams) !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_createFromFile(params.filename.str, &C.sfIntRect(params.area)))
 		if voidptr(result) == C.NULL {
@@ -66,9 +66,9 @@ pub:
 }
 
 // new_texture_from_memory: create a new texture from a file in memory
-pub fn new_texture_from_memory(params TextureNewTextureFromMemoryParams) ?&Texture {
+pub fn new_texture_from_memory(params TextureNewTextureFromMemoryParams) !&Texture {
 	unsafe {
-		result := &Texture(C.sfTexture_createFromMemory(voidptr(params.data), size_t(params.size_in_bytes),
+		result := &Texture(C.sfTexture_createFromMemory(voidptr(params.data), usize(params.size_in_bytes),
 			&C.sfIntRect(params.area)))
 		if voidptr(result) == C.NULL {
 			return error('new_texture_from_memory failed with size_in_bytes=$params.size_in_bytes')
@@ -86,7 +86,7 @@ pub:
 }
 
 // new_texture_from_stream: create a new texture from a custom stream
-pub fn new_texture_from_stream(params TextureNewTextureFromStreamParams) ?&Texture {
+pub fn new_texture_from_stream(params TextureNewTextureFromStreamParams) !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_createFromStream(&C.sfInputStream(params.stream),
 			&C.sfIntRect(params.area)))
@@ -105,7 +105,7 @@ pub:
 }
 
 // new_texture_from_image: create a new texture from an image
-pub fn new_texture_from_image(params TextureNewTextureFromImageParams) ?&Texture {
+pub fn new_texture_from_image(params TextureNewTextureFromImageParams) !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_createFromImage(&C.sfImage(params.image), &C.sfIntRect(params.area)))
 		if voidptr(result) == C.NULL {
@@ -123,7 +123,7 @@ pub:
 }
 
 // copy: copy an existing texture
-pub fn (t &Texture) copy() ?&Texture {
+pub fn (t &Texture) copy() !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_copy(&C.sfTexture(t)))
 		if voidptr(result) == C.NULL {
@@ -149,7 +149,7 @@ pub fn (t &Texture) get_size() system.Vector2u {
 }
 
 // copy_to_image: copy a texture's pixels to an image
-pub fn (t &Texture) copy_to_image() ?&Image {
+pub fn (t &Texture) copy_to_image() !&Image {
 	unsafe {
 		result := &Image(C.sfTexture_copyToImage(&C.sfTexture(t)))
 		if voidptr(result) == C.NULL {
@@ -162,7 +162,7 @@ pub fn (t &Texture) copy_to_image() ?&Image {
 // update_from_pixels: update a texture from an array of pixels
 pub fn (t &Texture) update_from_pixels(params TextureUpdateFromPixelsParams) {
 	unsafe {
-		C.sfTexture_updateFromPixels(&C.sfTexture(t), &byte(params.pixels), u32(params.width),
+		C.sfTexture_updateFromPixels(&C.sfTexture(t), &u8(params.pixels), u32(params.width),
 			u32(params.height), u32(params.x), u32(params.y))
 	}
 }
@@ -170,7 +170,7 @@ pub fn (t &Texture) update_from_pixels(params TextureUpdateFromPixelsParams) {
 // TextureUpdateFromPixelsParams: parameters for update_from_pixels
 pub struct TextureUpdateFromPixelsParams {
 pub:
-	pixels &byte [required] // array of pixels to copy to the texture
+	pixels &u8   [required] // array of pixels to copy to the texture
 	width  u32   [required] // width of the pixel region contained in \a pixels
 	height u32   [required] // height of the pixel region contained in \a pixels
 	x      u32   [required] // x offset in the texture where to copy the source pixels

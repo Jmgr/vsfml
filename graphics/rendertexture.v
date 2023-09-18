@@ -26,7 +26,7 @@ fn C.sfRenderTexture_drawConvexShape(&C.sfRenderTexture, &C.sfConvexShape, &C.sf
 fn C.sfRenderTexture_drawRectangleShape(&C.sfRenderTexture, &C.sfRectangleShape, &C.sfRenderStates)
 fn C.sfRenderTexture_drawVertexArray(&C.sfRenderTexture, &C.sfVertexArray, &C.sfRenderStates)
 fn C.sfRenderTexture_drawVertexBuffer(&C.sfRenderTexture, &C.sfVertexBuffer, &C.sfRenderStates)
-fn C.sfRenderTexture_drawPrimitives(&C.sfRenderTexture, &C.sfVertex, size_t, C.sfPrimitiveType, &C.sfRenderStates)
+fn C.sfRenderTexture_drawPrimitives(&C.sfRenderTexture, &C.sfVertex, usize, C.sfPrimitiveType, &C.sfRenderStates)
 fn C.sfRenderTexture_pushGLStates(&C.sfRenderTexture)
 fn C.sfRenderTexture_popGLStates(&C.sfRenderTexture)
 fn C.sfRenderTexture_resetGLStates(&C.sfRenderTexture)
@@ -38,7 +38,7 @@ fn C.sfRenderTexture_isRepeated(&C.sfRenderTexture) int
 fn C.sfRenderTexture_generateMipmap(&C.sfRenderTexture) int
 
 // new_render_texture: construct a new render texture
-pub fn new_render_texture(params RenderTextureNewRenderTextureParams) ?&RenderTexture {
+pub fn new_render_texture(params RenderTextureNewRenderTextureParams) !&RenderTexture {
 	unsafe {
 		result := &RenderTexture(C.sfRenderTexture_create(u32(params.width), u32(params.height),
 			int(params.depth_buffer)))
@@ -58,7 +58,7 @@ pub:
 }
 
 // new_render_texture_with_settings: construct a new render texture
-pub fn new_render_texture_with_settings(params RenderTextureNewRenderTextureWithSettingsParams) ?&RenderTexture {
+pub fn new_render_texture_with_settings(params RenderTextureNewRenderTextureWithSettingsParams) !&RenderTexture {
 	unsafe {
 		result := &RenderTexture(C.sfRenderTexture_createWithSettings(u32(params.width),
 			u32(params.height), &C.sfContextSettings(params.settings)))
@@ -109,7 +109,7 @@ pub fn (r &RenderTexture) display() {
 // clear: clear the rendertexture with the given color
 pub fn (r &RenderTexture) clear(color Color) {
 	unsafe {
-		C.sfRenderTexture_clear(&C.sfRenderTexture(r), C.sfColor(color))
+		C.sfRenderTexture_clear(&C.sfRenderTexture(r), *&C.sfColor(&color))
 	}
 }
 
@@ -121,7 +121,7 @@ pub fn (r &RenderTexture) set_view(view &View) {
 }
 
 // get_view: get the current active view of a render texture
-pub fn (r &RenderTexture) get_view() ?&View {
+pub fn (r &RenderTexture) get_view() !&View {
 	unsafe {
 		result := &View(C.sfRenderTexture_getView(&C.sfRenderTexture(r)))
 		if voidptr(result) == C.NULL {
@@ -132,7 +132,7 @@ pub fn (r &RenderTexture) get_view() ?&View {
 }
 
 // get_default_view: get the default view of a render texture
-pub fn (r &RenderTexture) get_default_view() ?&View {
+pub fn (r &RenderTexture) get_default_view() !&View {
 	unsafe {
 		result := &View(C.sfRenderTexture_getDefaultView(&C.sfRenderTexture(r)))
 		if voidptr(result) == C.NULL {
@@ -165,7 +165,7 @@ pub fn (r &RenderTexture) get_viewport(view &View) IntRect {
 pub fn (r &RenderTexture) map_pixel_to_coords(point system.Vector2i, view &View) system.Vector2f {
 	unsafe {
 		return system.Vector2f(C.sfRenderTexture_mapPixelToCoords(&C.sfRenderTexture(r),
-			C.sfVector2i(point), &C.sfView(view)))
+			*&C.sfVector2i(&point), &C.sfView(view)))
 	}
 }
 
@@ -184,7 +184,7 @@ pub fn (r &RenderTexture) map_pixel_to_coords(point system.Vector2i, view &View)
 pub fn (r &RenderTexture) map_coords_to_pixel(point system.Vector2f, view &View) system.Vector2i {
 	unsafe {
 		return system.Vector2i(C.sfRenderTexture_mapCoordsToPixel(&C.sfRenderTexture(r),
-			C.sfVector2f(point), &C.sfView(view)))
+			*&C.sfVector2f(&point), &C.sfView(view)))
 	}
 }
 
@@ -312,7 +312,7 @@ pub:
 pub fn (r &RenderTexture) draw_primitives(params RenderTextureDrawPrimitivesParams) {
 	unsafe {
 		C.sfRenderTexture_drawPrimitives(&C.sfRenderTexture(r), &C.sfVertex(params.vertices),
-			size_t(params.vertex_count), C.sfPrimitiveType(params.primitive_type), &C.sfRenderStates(params.states))
+			usize(params.vertex_count), *&C.sfPrimitiveType(&params.primitive_type), &C.sfRenderStates(params.states))
 	}
 }
 
@@ -357,7 +357,7 @@ pub fn (r &RenderTexture) reset_gl_states() {
 }
 
 // get_texture: get the target texture of a render texture
-pub fn (r &RenderTexture) get_texture() ?&Texture {
+pub fn (r &RenderTexture) get_texture() !&Texture {
 	unsafe {
 		result := &Texture(C.sfRenderTexture_getTexture(&C.sfRenderTexture(r)))
 		if voidptr(result) == C.NULL {
