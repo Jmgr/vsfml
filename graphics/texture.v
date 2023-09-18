@@ -1,7 +1,7 @@
 module graphics
 
-import system
-import window
+import vsfml.system
+import vsfml.window
 
 #include <SFML/Graphics/Texture.h>
 
@@ -34,7 +34,7 @@ pub fn new_texture(params TextureNewTextureParams) !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_create(u32(params.width), u32(params.height)))
 		if voidptr(result) == C.NULL {
-			return error('new_texture failed with width=$params.width height=$params.height')
+			return error('new_texture failed with width=${params.width} height=${params.height}')
 		}
 		return result
 	}
@@ -52,7 +52,7 @@ pub fn new_texture_from_file(params TextureNewTextureFromFileParams) !&Texture {
 	unsafe {
 		result := &Texture(C.sfTexture_createFromFile(params.filename.str, &C.sfIntRect(params.area)))
 		if voidptr(result) == C.NULL {
-			return error('new_texture_from_file failed with filename=$params.filename')
+			return error('new_texture_from_file failed with filename=${params.filename}')
 		}
 		return result
 	}
@@ -71,7 +71,7 @@ pub fn new_texture_from_memory(params TextureNewTextureFromMemoryParams) !&Textu
 		result := &Texture(C.sfTexture_createFromMemory(voidptr(params.data), usize(params.size_in_bytes),
 			&C.sfIntRect(params.area)))
 		if voidptr(result) == C.NULL {
-			return error('new_texture_from_memory failed with size_in_bytes=$params.size_in_bytes')
+			return error('new_texture_from_memory failed with size_in_bytes=${params.size_in_bytes}')
 		}
 		return result
 	}
@@ -81,7 +81,7 @@ pub fn new_texture_from_memory(params TextureNewTextureFromMemoryParams) !&Textu
 pub struct TextureNewTextureFromMemoryParams {
 pub:
 	data          voidptr  [required] // pointer to the file data in memory
-	size_in_bytes u64      [required] // size of the data to load, in bytes
+	size_in_bytes u64      [required]     // size of the data to load, in bytes
 	area          &IntRect = C.NULL // area of the source image to load (NULL to load the entire image)
 }
 
@@ -170,11 +170,11 @@ pub fn (t &Texture) update_from_pixels(params TextureUpdateFromPixelsParams) {
 // TextureUpdateFromPixelsParams: parameters for update_from_pixels
 pub struct TextureUpdateFromPixelsParams {
 pub:
-	pixels &u8   [required] // array of pixels to copy to the texture
-	width  u32   [required] // width of the pixel region contained in \a pixels
-	height u32   [required] // height of the pixel region contained in \a pixels
-	x      u32   [required] // x offset in the texture where to copy the source pixels
-	y      u32   [required] // y offset in the texture where to copy the source pixels
+	pixels &u8 [required] // array of pixels to copy to the texture
+	width  u32 [required] // width of the pixel region contained in \a pixels
+	height u32 [required] // height of the pixel region contained in \a pixels
+	x      u32 [required] // x offset in the texture where to copy the source pixels
+	y      u32 [required] // y offset in the texture where to copy the source pixels
 }
 
 // update_from_texture: update a part of this texture from another texture
@@ -185,8 +185,8 @@ pub:
 // previously created.
 pub fn (t &Texture) update_from_texture(params TextureUpdateFromTextureParams) {
 	unsafe {
-		C.sfTexture_updateFromTexture(&C.sfTexture(t), &C.sfTexture(params.source),
-			u32(params.x), u32(params.y))
+		C.sfTexture_updateFromTexture(&C.sfTexture(t), &C.sfTexture(params.source), u32(params.x),
+			u32(params.y))
 	}
 }
 
@@ -194,8 +194,8 @@ pub fn (t &Texture) update_from_texture(params TextureUpdateFromTextureParams) {
 pub struct TextureUpdateFromTextureParams {
 pub:
 	source &Texture [required] // source texture to copy to destination texture
-	x      u32      [required] // x offset in this texture where to copy the source texture
-	y      u32      [required] // y offset in this texture where to copy the source texture
+	x      u32      [required]      // x offset in this texture where to copy the source texture
+	y      u32      [required]      // y offset in this texture where to copy the source texture
 }
 
 // update_from_image: update a texture from an image
@@ -210,8 +210,8 @@ pub fn (t &Texture) update_from_image(params TextureUpdateFromImageParams) {
 pub struct TextureUpdateFromImageParams {
 pub:
 	image &Image [required] // image to copy to the texture
-	x     u32    [required] // x offset in the texture where to copy the source pixels
-	y     u32    [required] // y offset in the texture where to copy the source pixels
+	x     u32    [required]    // x offset in the texture where to copy the source pixels
+	y     u32    [required]    // y offset in the texture where to copy the source pixels
 }
 
 // update_from_window: update a texture from the contents of a window

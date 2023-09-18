@@ -1,6 +1,6 @@
 module audio
 
-import system
+import vsfml.system
 
 #include <SFML/Audio/SoundRecorder.h>
 
@@ -28,7 +28,7 @@ pub fn new_sound_recorder(params SoundRecorderNewSoundRecorderParams) !&SoundRec
 			*&C.sfSoundRecorderProcessCallback(&params.on_process), *&C.sfSoundRecorderStopCallback(&params.on_stop),
 			voidptr(params.user_data)))
 		if voidptr(result) == C.NULL {
-			return error('new_sound_recorder failed with on_start=$params.on_start on_process=$params.on_process on_stop=$params.on_stop')
+			return error('new_sound_recorder failed with on_start=${params.on_start} on_process=${params.on_process} on_stop=${params.on_stop}')
 		}
 		return result
 	}

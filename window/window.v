@@ -1,6 +1,6 @@
 module window
 
-import system
+import vsfml.system
 
 #include <SFML/Window/Window.h>
 
@@ -22,8 +22,8 @@ pub type ContextSettings = C.sfContextSettings
 // ContextAttribute: enumeration of the context attribute flags
 pub enum ContextAttribute {
 	default = 0 // Non-debug, compatibility context (this and the core attribute are mutually exclusive)
-	core = 1 // Core attribute
-	debug = 4 // Debug attribute
+	core    = 1 // Core attribute
+	debug   = 4 // Debug attribute
 }
 
 fn C.sfWindow_create(C.sfVideoMode, &char, u32, &C.sfContextSettings) &C.sfWindow
@@ -70,7 +70,7 @@ pub fn new_window(params WindowNewWindowParams) !&Window {
 		result := &Window(C.sfWindow_create(*&C.sfVideoMode(&params.mode), params.title.str,
 			u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_window failed with mode=$params.mode title=$params.title style=$params.style')
+			return error('new_window failed with mode=${params.mode} title=${params.title} style=${params.style}')
 		}
 		return result
 	}
@@ -80,7 +80,7 @@ pub fn new_window(params WindowNewWindowParams) !&Window {
 pub struct WindowNewWindowParams {
 pub:
 	mode     VideoMode        [required] // video mode to use (defines the width, height and depth of the rendering area of the window)
-	title    string           [required] // title of the window
+	title    string           [required]    // title of the window
 	style    u32 = u32(WindowStyle.default_style) // window style
 	settings &ContextSettings = C.NULL // additional settings for the underlying OpenGL context
 }
@@ -99,7 +99,7 @@ pub fn new_window_unicode(params WindowNewWindowUnicodeParams) !&Window {
 		result := &Window(C.sfWindow_createUnicode(*&C.sfVideoMode(&params.mode), &u32(params.title),
 			u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_window_unicode failed with mode=$params.mode style=$params.style')
+			return error('new_window_unicode failed with mode=${params.mode} style=${params.style}')
 		}
 		return result
 	}
@@ -109,7 +109,7 @@ pub fn new_window_unicode(params WindowNewWindowUnicodeParams) !&Window {
 pub struct WindowNewWindowUnicodeParams {
 pub:
 	mode     VideoMode        [required] // video mode to use (defines the width, height and depth of the rendering area of the window)
-	title    &u32             [required] // title of the window (UTF-32)
+	title    &u32             [required]      // title of the window (UTF-32)
 	style    u32 = u32(WindowStyle.default_style) // window style
 	settings &ContextSettings = C.NULL // additional settings for the underlying OpenGL context
 }
@@ -125,7 +125,7 @@ pub fn new_window_from_handle(params WindowNewWindowFromHandleParams) !&Window {
 		result := &Window(C.sfWindow_createFromHandle(*&C.sfWindowHandle(&params.handle),
 			&C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_window_from_handle failed with handle=$params.handle')
+			return error('new_window_from_handle failed with handle=${params.handle}')
 		}
 		return result
 	}
@@ -250,8 +250,8 @@ pub fn (w &Window) set_icon(params WindowSetIconParams) {
 // WindowSetIconParams: parameters for set_icon
 pub struct WindowSetIconParams {
 pub:
-	width  u32   [required] // icon's width, in pixels
-	height u32   [required] // icon's height, in pixels
+	width  u32   [required]   // icon's width, in pixels
+	height u32   [required]   // icon's height, in pixels
 	pixels &byte [required] // pointer to the array of pixels in memory
 }
 

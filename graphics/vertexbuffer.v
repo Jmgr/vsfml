@@ -38,7 +38,7 @@ pub fn new_vertex_buffer(params VertexBufferNewVertexBufferParams) !&VertexBuffe
 		result := &VertexBuffer(C.sfVertexBuffer_create(u32(params.vertex_count), *&C.sfPrimitiveType(&params.primitive_type),
 			*&C.sfVertexBufferUsage(&params.usage)))
 		if voidptr(result) == C.NULL {
-			return error('new_vertex_buffer failed with vertex_count=$params.vertex_count primitive_type=$params.primitive_type usage=$params.usage')
+			return error('new_vertex_buffer failed with vertex_count=${params.vertex_count} primitive_type=${params.primitive_type} usage=${params.usage}')
 		}
 		return result
 	}
@@ -48,7 +48,7 @@ pub fn new_vertex_buffer(params VertexBufferNewVertexBufferParams) !&VertexBuffe
 pub struct VertexBufferNewVertexBufferParams {
 pub:
 	vertex_count   u32               [required] // amount of vertices
-	primitive_type PrimitiveType     [required] // type of primitive
+	primitive_type PrimitiveType     [required]     // type of primitive
 	usage          VertexBufferUsage [required] // usage specifier
 }
 
@@ -83,7 +83,7 @@ pub fn (v &VertexBuffer) update(params VertexBufferUpdateParams) bool {
 pub struct VertexBufferUpdateParams {
 pub:
 	vertices     &Vertex [required] // number of vertices to copy
-	vertex_count u32     [required] // offset in the buffer to copy to
+	vertex_count u32     [required]     // offset in the buffer to copy to
 	offset       u32     [required]
 }
 

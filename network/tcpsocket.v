@@ -1,6 +1,6 @@
 module network
 
-import system
+import vsfml.system
 
 #include <SFML/Network/TcpSocket.h>
 
@@ -82,8 +82,8 @@ pub fn (t &TcpSocket) connect(params TcpSocketConnectParams) SocketStatus {
 // TcpSocketConnectParams: parameters for connect
 pub struct TcpSocketConnectParams {
 pub:
-	remote_address IpAddress   [required] // address of the remote peer
-	remote_port    u16         [required] // port of the remote peer
+	remote_address IpAddress   [required]   // address of the remote peer
+	remote_port    u16         [required]         // port of the remote peer
 	timeout        system.Time [required] // maximum time to wait
 }
 
@@ -120,8 +120,8 @@ pub fn (t &TcpSocket) send_partial(params TcpSocketSendPartialParams) SocketStat
 pub struct TcpSocketSendPartialParams {
 pub:
 	data voidptr [required] // pointer to the sequence of bytes to send
-	size u64     [required] // number of bytes to send
-	sent &u64    [required] // the number of bytes sent will be written here
+	size u64     [required]     // number of bytes to send
+	sent &u64    [required]    // the number of bytes sent will be written here
 }
 
 // receive: receive raw data from the remote peer of a TCP socket
@@ -130,8 +130,8 @@ pub:
 // This function will fail if the socket is not connected.
 pub fn (t &TcpSocket) receive(params TcpSocketReceiveParams) SocketStatus {
 	unsafe {
-		return SocketStatus(C.sfTcpSocket_receive(&C.sfTcpSocket(t), params.data,
-			usize(params.size), &usize(params.received)))
+		return SocketStatus(C.sfTcpSocket_receive(&C.sfTcpSocket(t), params.data, usize(params.size),
+			&usize(params.received)))
 	}
 }
 
@@ -139,8 +139,8 @@ pub fn (t &TcpSocket) receive(params TcpSocketReceiveParams) SocketStatus {
 pub struct TcpSocketReceiveParams {
 pub:
 	data     voidptr [required] // pointer to the array to fill with the received bytes
-	size     u64     [required] // maximum number of bytes that can be received
-	received &u64    [required] // this variable is filled with the actual number of bytes received
+	size     u64     [required]     // maximum number of bytes that can be received
+	received &u64    [required]    // this variable is filled with the actual number of bytes received
 }
 
 // send_packet: send a formatted packet of data to the remote peer of a TCP socket

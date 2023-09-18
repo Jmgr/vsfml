@@ -1,6 +1,6 @@
 module audio
 
-import system
+import vsfml.system
 
 #include <SFML/Audio/SoundBuffer.h>
 
@@ -23,7 +23,7 @@ pub fn new_sound_buffer_from_file(params SoundBufferNewSoundBufferFromFileParams
 	unsafe {
 		result := &SoundBuffer(C.sfSoundBuffer_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
-			return error('new_sound_buffer_from_file failed with filename=$params.filename')
+			return error('new_sound_buffer_from_file failed with filename=${params.filename}')
 		}
 		return result
 	}
@@ -44,7 +44,7 @@ pub fn new_sound_buffer_from_memory(params SoundBufferNewSoundBufferFromMemoryPa
 		result := &SoundBuffer(C.sfSoundBuffer_createFromMemory(voidptr(params.data),
 			usize(params.size_in_bytes)))
 		if voidptr(result) == C.NULL {
-			return error('new_sound_buffer_from_memory failed with size_in_bytes=$params.size_in_bytes')
+			return error('new_sound_buffer_from_memory failed with size_in_bytes=${params.size_in_bytes}')
 		}
 		return result
 	}
@@ -54,7 +54,7 @@ pub fn new_sound_buffer_from_memory(params SoundBufferNewSoundBufferFromMemoryPa
 pub struct SoundBufferNewSoundBufferFromMemoryParams {
 pub:
 	data          voidptr [required] // pointer to the file data in memory
-	size_in_bytes u64     [required] // size of the data to load, in bytes
+	size_in_bytes u64     [required]     // size of the data to load, in bytes
 }
 
 // new_sound_buffer_from_stream: create a new sound buffer and load it from a custom stream
@@ -85,7 +85,7 @@ pub fn new_sound_buffer_from_samples(params SoundBufferNewSoundBufferFromSamples
 		result := &SoundBuffer(C.sfSoundBuffer_createFromSamples(&i16(params.samples),
 			u64(params.sample_count), u32(params.channel_count), u32(params.sample_rate)))
 		if voidptr(result) == C.NULL {
-			return error('new_sound_buffer_from_samples failed with sample_count=$params.sample_count channel_count=$params.channel_count sample_rate=$params.sample_rate')
+			return error('new_sound_buffer_from_samples failed with sample_count=${params.sample_count} channel_count=${params.channel_count} sample_rate=${params.sample_rate}')
 		}
 		return result
 	}
@@ -95,9 +95,9 @@ pub fn new_sound_buffer_from_samples(params SoundBufferNewSoundBufferFromSamples
 pub struct SoundBufferNewSoundBufferFromSamplesParams {
 pub:
 	samples       &i16 [required] // pointer to the array of samples in memory
-	sample_count  u64  [required] // number of samples in the array
-	channel_count u32  [required] // number of channels (1 = mono, 2 = stereo, ...)
-	sample_rate   u32  [required] // sample rate (number of samples to play per second)
+	sample_count  u64  [required]  // number of samples in the array
+	channel_count u32  [required]  // number of channels (1 = mono, 2 = stereo, ...)
+	sample_rate   u32  [required]  // sample rate (number of samples to play per second)
 }
 
 // copy: create a new sound buffer by copying an existing one

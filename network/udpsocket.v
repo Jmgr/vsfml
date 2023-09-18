@@ -91,10 +91,10 @@ pub fn (u &UdpSocket) send(params UdpSocketSendParams) SocketStatus {
 // UdpSocketSendParams: parameters for send
 pub struct UdpSocketSendParams {
 pub:
-	data           voidptr   [required] // pointer to the sequence of bytes to send
-	size           u64       [required] // number of bytes to send
+	data           voidptr   [required]   // pointer to the sequence of bytes to send
+	size           u64       [required]       // number of bytes to send
 	remote_address IpAddress [required] // address of the receiver
-	remote_port    u16       [required] // port of the receiver to send the data to
+	remote_port    u16       [required]       // port of the receiver to send the data to
 }
 
 // receive: receive raw data from a remote peer with a UDP socket
@@ -115,11 +115,11 @@ pub fn (u &UdpSocket) receive(params UdpSocketReceiveParams) SocketStatus {
 // UdpSocketReceiveParams: parameters for receive
 pub struct UdpSocketReceiveParams {
 pub:
-	data           voidptr    [required] // pointer to the array to fill with the received bytes
-	size           u64        [required] // maximum number of bytes that can be received
-	received       &u64       [required] // this variable is filled with the actual number of bytes received
+	data           voidptr    [required]    // pointer to the array to fill with the received bytes
+	size           u64        [required]        // maximum number of bytes that can be received
+	received       &u64       [required]       // this variable is filled with the actual number of bytes received
 	remote_address &IpAddress [required] // address of the peer that sent the data
-	remote_port    &u16       [required] // port of the peer that sent the data
+	remote_port    &u16       [required]       // port of the peer that sent the data
 }
 
 // send_packet: send a formatted packet of data to a remote peer with a UDP socket
@@ -136,9 +136,9 @@ pub fn (u &UdpSocket) send_packet(params UdpSocketSendPacketParams) SocketStatus
 // UdpSocketSendPacketParams: parameters for send_packet
 pub struct UdpSocketSendPacketParams {
 pub:
-	packet         &Packet   [required] // packet to send
+	packet         &Packet   [required]   // packet to send
 	remote_address IpAddress [required] // address of the receiver
-	remote_port    u16       [required] // port of the receiver to send the data to
+	remote_port    u16       [required]       // port of the receiver to send the data to
 }
 
 // receive_packet: receive a formatted packet of data from a remote peer with a UDP socket
@@ -154,7 +154,7 @@ pub fn (u &UdpSocket) receive_packet(params UdpSocketReceivePacketParams) Socket
 // UdpSocketReceivePacketParams: parameters for receive_packet
 pub struct UdpSocketReceivePacketParams {
 pub:
-	packet         &Packet    [required] // address of the peer that sent the data
+	packet         &Packet    [required]    // address of the peer that sent the data
 	remote_address &IpAddress [required] // port of the peer that sent the data
 	remote_port    &u16       [required]
 }

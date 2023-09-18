@@ -1,6 +1,6 @@
 module network
 
-import system
+import vsfml.system
 
 #include <SFML/Network/Http.h>
 
@@ -15,29 +15,29 @@ pub enum HttpMethod {
 
 // HttpStatus: enumerate all the valid status codes for a response
 pub enum HttpStatus {
-	ok = 200 // Most common code returned when operation was successful
-	created = 201 // The resource has successfully been created
-	accepted = 202 // The request has been accepted, but will be processed later by the server
-	no_content = 204 // Sent when the server didn't send any data in return
-	reset_content = 205 // The server informs the client that it should clear the view (form) that caused the request to be sent
-	partial_content = 206 // The server has sent a part of the resource, as a response to a partial GET request
-	multiple_choices = 300 // The requested page can be accessed from several locations
-	moved_permanently = 301 // The requested page has permanently moved to a new location
-	moved_temporarily = 302 // The requested page has temporarily moved to a new location
-	not_modified = 304 // For conditional requests, means the requested page hasn't changed and doesn't need to be refreshed
-	bad_request = 400 // The server couldn't understand the request (syntax error)
-	unauthorized = 401 // The requested page needs an authentication to be accessed
-	forbidden = 403 // The requested page cannot be accessed at all, even with authentication
-	not_found = 404 // The requested page doesn't exist
+	ok                    = 200 // Most common code returned when operation was successful
+	created               = 201 // The resource has successfully been created
+	accepted              = 202 // The request has been accepted, but will be processed later by the server
+	no_content            = 204 // Sent when the server didn't send any data in return
+	reset_content         = 205 // The server informs the client that it should clear the view (form) that caused the request to be sent
+	partial_content       = 206 // The server has sent a part of the resource, as a response to a partial GET request
+	multiple_choices      = 300 // The requested page can be accessed from several locations
+	moved_permanently     = 301 // The requested page has permanently moved to a new location
+	moved_temporarily     = 302 // The requested page has temporarily moved to a new location
+	not_modified          = 304 // For conditional requests, means the requested page hasn't changed and doesn't need to be refreshed
+	bad_request           = 400 // The server couldn't understand the request (syntax error)
+	unauthorized          = 401 // The requested page needs an authentication to be accessed
+	forbidden             = 403 // The requested page cannot be accessed at all, even with authentication
+	not_found             = 404 // The requested page doesn't exist
 	range_not_satisfiable = 407 // The server can't satisfy the partial GET request (with a "Range" header field)
 	internal_server_error = 500 // The server encountered an unexpected error
-	not_implemented = 501 // The server doesn't implement a requested feature
-	bad_gateway = 502 // The gateway server has received an error from the source server
+	not_implemented       = 501 // The server doesn't implement a requested feature
+	bad_gateway           = 502 // The gateway server has received an error from the source server
 	service_not_available = 503 // The server is temporarily unavailable (overloaded, in maintenance, ...)
-	gateway_timeout = 504 // The gateway server couldn't receive a response from the source server
+	gateway_timeout       = 504 // The gateway server couldn't receive a response from the source server
 	version_not_supported = 505 // The server doesn't support the requested HTTP version
-	invalid_response = 1000 // Response is not a valid HTTP one
-	connection_failed = 1001 // Connection with server failed
+	invalid_response      = 1000 // Response is not a valid HTTP one
+	connection_failed     = 1001 // Connection with server failed
 }
 
 fn C.sfHttpRequest_create() &C.sfHttpRequest
@@ -209,7 +209,7 @@ pub fn (h &Http) send_request(request &HttpRequest, timeout system.Time) !&HttpR
 		result := &HttpResponse(C.sfHttp_sendRequest(&C.sfHttp(h), &C.sfHttpRequest(request),
 			*&C.sfTime(&timeout)))
 		if voidptr(result) == C.NULL {
-			return error('send_request failed with timeout=$timeout')
+			return error('send_request failed with timeout=${timeout}')
 		}
 		return result
 	}

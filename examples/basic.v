@@ -9,13 +9,13 @@ fn main() {
 	win := graphics.new_render_window(
 		mode: window.VideoMode{800, 600, 32}
 		title: 'Basic example'
-	) !
+	)!
 	win.set_vertical_sync_enabled(true)
 
 	sfml_logo_texture := graphics.new_texture_from_file(
 		filename: os.resource_abs_path('resources/sfml_logo.png')
-	) !
-	sfml_logo := graphics.new_sprite() !
+	)!
+	sfml_logo := graphics.new_sprite()!
 	sfml_logo.set_texture(sfml_logo_texture, true)
 	sfml_logo.set_position(system.Vector2f{170, 50})
 

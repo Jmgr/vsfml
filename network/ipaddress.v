@@ -1,6 +1,6 @@
 module network
 
-import system
+import vsfml.system
 
 #include <SFML/Network/IpAddress.h>
 

@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/RectangleShape.h>
 
@@ -189,8 +189,7 @@ pub fn (r &RectangleShape) get_inverse_transform() Transform {
 // use it, the behaviour is undefined.
 pub fn (r &RectangleShape) set_texture(texture &Texture, resetRect bool) {
 	unsafe {
-		C.sfRectangleShape_setTexture(&C.sfRectangleShape(r), &C.sfTexture(texture),
-			int(resetRect))
+		C.sfRectangleShape_setTexture(&C.sfRectangleShape(r), &C.sfTexture(texture), int(resetRect))
 	}
 }
 
