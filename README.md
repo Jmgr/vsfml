@@ -14,11 +14,13 @@ Only tested on Ubuntu 18.04, but should work on other operating systems.
  * [network](https://jmgr.github.io/vsfml/network.html)
  * [audio](https://jmgr.github.io/vsfml/audio.html)
 
-## Examples
+## Examples:
 
+Basic example:
 ```v
 module main
 
+import os
 import vsfml.graphics
 import vsfml.window
 import vsfml.system
@@ -27,11 +29,12 @@ fn main() {
 	win := graphics.new_render_window(
 		mode: window.VideoMode{800, 600, 32}
 		title: 'Basic example'
-	) ?
+	)!
 	win.set_vertical_sync_enabled(true)
-
-	sfml_logo_texture := graphics.new_texture_from_file(filename: 'resources/sfml_logo.png') ?
-	sfml_logo := graphics.new_sprite() ?
+	sfml_logo_texture := graphics.new_texture_from_file(
+		filename: os.join_path(os.vmodules_dir(), 'vsfml/examples/resources/sfml_logo.png')
+	)!
+	sfml_logo := graphics.new_sprite()!
 	sfml_logo.set_texture(sfml_logo_texture, true)
 	sfml_logo.set_position(system.Vector2f{170, 50})
 
@@ -77,3 +80,4 @@ The [examples](https://github.com/Jmgr/vsfml/tree/master/examples) directory con
 #### Ubuntu
 
 `$ sudo apt install libcsfml-dev`
+
