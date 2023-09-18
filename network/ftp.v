@@ -88,7 +88,7 @@ fn C.sfFtp_createDirectory(&C.sfFtp, &char) &C.sfFtpResponse
 fn C.sfFtp_deleteDirectory(&C.sfFtp, &char) &C.sfFtpResponse
 fn C.sfFtp_renameFile(&C.sfFtp, &char, &char) &C.sfFtpResponse
 fn C.sfFtp_deleteFile(&C.sfFtp, &char) &C.sfFtpResponse
-fn C.sfFtp_download(&C.sfFtp, &char, &char, C.sf<FtpTransferMode) &C.sfFtpResponse
+fn C.sfFtp_download(&C.sfFtp, &char, &char, C.sfFtpTransferMode) &C.sfFtpResponse
 fn C.sfFtp_upload(&C.sfFtp, &char, &char, C.sfFtpTransferMode, int) &C.sfFtpResponse
 fn C.sfFtp_sendCommand(&C.sfFtp, &char, &char) &C.sfFtpResponse
 
