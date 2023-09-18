@@ -4,7 +4,7 @@ module window
 
 // KeyCode: key codes
 pub enum KeyCode {
-	unknown = -1 // Unhandled key
+	unknown   = -1 // Unhandled key
 	a // The A key
 	b // The B key
 	c // The C key

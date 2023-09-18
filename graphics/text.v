@@ -1,15 +1,15 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/Text.h>
 
 // TextStyle: text styles
 pub enum TextStyle {
-	regular = 0 // Regular characters, no style
-	bold = 1 // Bold characters
-	italic = 2 // Italic characters
-	underlined = 4 // Underlined characters
+	regular        = 0 // Regular characters, no style
+	bold           = 1 // Bold characters
+	italic         = 2 // Italic characters
+	underlined     = 4 // Underlined characters
 	strike_through = 8 // Strike through characters
 }
 

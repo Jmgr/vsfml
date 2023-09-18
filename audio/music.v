@@ -1,6 +1,6 @@
 module audio
 
-import system
+import vsfml.system
 
 #include <SFML/Audio/Music.h>
 
@@ -52,7 +52,7 @@ pub fn new_music_from_file(params MusicNewMusicFromFileParams) !&Music {
 	unsafe {
 		result := &Music(C.sfMusic_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
-			return error('new_music_from_file failed with filename=$params.filename')
+			return error('new_music_from_file failed with filename=${params.filename}')
 		}
 		return result
 	}
@@ -74,7 +74,7 @@ pub fn new_music_from_memory(params MusicNewMusicFromMemoryParams) !&Music {
 	unsafe {
 		result := &Music(C.sfMusic_createFromMemory(voidptr(params.data), usize(params.size_in_bytes)))
 		if voidptr(result) == C.NULL {
-			return error('new_music_from_memory failed with size_in_bytes=$params.size_in_bytes')
+			return error('new_music_from_memory failed with size_in_bytes=${params.size_in_bytes}')
 		}
 		return result
 	}
@@ -84,7 +84,7 @@ pub fn new_music_from_memory(params MusicNewMusicFromMemoryParams) !&Music {
 pub struct MusicNewMusicFromMemoryParams {
 pub:
 	data          voidptr [required] // pointer to the file data in memory
-	size_in_bytes u64     [required] // size of the data to load, in bytes
+	size_in_bytes u64     [required]     // size of the data to load, in bytes
 }
 
 // new_music_from_stream: create a new music and load it from a custom stream

@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/Font.h>
 
@@ -22,7 +22,7 @@ pub fn new_font_from_file(params FontNewFontFromFileParams) !&Font {
 	unsafe {
 		result := &Font(C.sfFont_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
-			return error('new_font_from_file failed with filename=$params.filename')
+			return error('new_font_from_file failed with filename=${params.filename}')
 		}
 		return result
 	}
@@ -39,7 +39,7 @@ pub fn new_font_from_memory(params FontNewFontFromMemoryParams) !&Font {
 	unsafe {
 		result := &Font(C.sfFont_createFromMemory(voidptr(params.data), usize(params.size_in_bytes)))
 		if voidptr(result) == C.NULL {
-			return error('new_font_from_memory failed with size_in_bytes=$params.size_in_bytes')
+			return error('new_font_from_memory failed with size_in_bytes=${params.size_in_bytes}')
 		}
 		return result
 	}
@@ -49,7 +49,7 @@ pub fn new_font_from_memory(params FontNewFontFromMemoryParams) !&Font {
 pub struct FontNewFontFromMemoryParams {
 pub:
 	data          voidptr [required] // pointer to the file data in memory
-	size_in_bytes u64     [required] // size of the data to load, in bytes
+	size_in_bytes u64     [required]     // size of the data to load, in bytes
 }
 
 // new_font_from_stream: create a new image font a custom stream
@@ -99,10 +99,10 @@ pub fn (f &Font) get_glyph(params FontGetGlyphParams) Glyph {
 // FontGetGlyphParams: parameters for get_glyph
 pub struct FontGetGlyphParams {
 pub:
-	code_point        u32  [required] // unicode code point of the character to get
-	character_size    u32  [required] // character size, in pixels
+	code_point        u32  [required]  // unicode code point of the character to get
+	character_size    u32  [required]  // character size, in pixels
 	bold              bool [required] // retrieve the bold version or the regular one?
-	outline_thickness f32  [required] // thickness of outline (when != 0 the glyph will not be filled)
+	outline_thickness f32  [required]  // thickness of outline (when != 0 the glyph will not be filled)
 }
 
 // get_kerning: get the kerning value corresponding to a given pair of characters in a font
@@ -150,7 +150,7 @@ pub fn (f &Font) get_texture(characterSize u32) !&Texture {
 	unsafe {
 		result := &Texture(C.sfFont_getTexture(&C.sfFont(f), u32(characterSize)))
 		if voidptr(result) == C.NULL {
-			return error('get_texture failed with characterSize=$characterSize')
+			return error('get_texture failed with characterSize=${characterSize}')
 		}
 		return result
 	}

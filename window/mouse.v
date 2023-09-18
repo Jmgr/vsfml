@@ -1,6 +1,6 @@
 module window
 
-import system
+import vsfml.system
 
 #include <SFML/Window/Mouse.h>
 

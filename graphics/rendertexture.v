@@ -1,7 +1,7 @@
 module graphics
 
-import window
-import system
+import vsfml.window
+import vsfml.system
 
 #include <SFML/Graphics/RenderTexture.h>
 
@@ -43,7 +43,7 @@ pub fn new_render_texture(params RenderTextureNewRenderTextureParams) !&RenderTe
 		result := &RenderTexture(C.sfRenderTexture_create(u32(params.width), u32(params.height),
 			int(params.depth_buffer)))
 		if voidptr(result) == C.NULL {
-			return error('new_render_texture failed with width=$params.width height=$params.height depth_buffer=$params.depth_buffer')
+			return error('new_render_texture failed with width=${params.width} height=${params.height} depth_buffer=${params.depth_buffer}')
 		}
 		return result
 	}
@@ -52,8 +52,8 @@ pub fn new_render_texture(params RenderTextureNewRenderTextureParams) !&RenderTe
 // RenderTextureNewRenderTextureParams: parameters for new_render_texture
 pub struct RenderTextureNewRenderTextureParams {
 pub:
-	width        u32  [required] // width of the render texture
-	height       u32  [required] // height of the render texture
+	width        u32  [required]  // width of the render texture
+	height       u32  [required]  // height of the render texture
 	depth_buffer bool [required] // do you want a depth-buffer attached? (useful only if you're doing 3D OpenGL on the rendertexture)
 }
 
@@ -63,7 +63,7 @@ pub fn new_render_texture_with_settings(params RenderTextureNewRenderTextureWith
 		result := &RenderTexture(C.sfRenderTexture_createWithSettings(u32(params.width),
 			u32(params.height), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_render_texture_with_settings failed with width=$params.width height=$params.height')
+			return error('new_render_texture_with_settings failed with width=${params.width} height=${params.height}')
 		}
 		return result
 	}
@@ -206,8 +206,7 @@ pub:
 // draw_text
 pub fn (r &RenderTexture) draw_text(params RenderTextureDrawTextParams) {
 	unsafe {
-		C.sfRenderTexture_drawText(&C.sfRenderTexture(r), &C.sfText(params.object),
-			&C.sfRenderStates(params.states))
+		C.sfRenderTexture_drawText(&C.sfRenderTexture(r), &C.sfText(params.object), &C.sfRenderStates(params.states))
 	}
 }
 
@@ -319,8 +318,8 @@ pub fn (r &RenderTexture) draw_primitives(params RenderTextureDrawPrimitivesPara
 // RenderTextureDrawPrimitivesParams: parameters for draw_primitives
 pub struct RenderTextureDrawPrimitivesParams {
 pub:
-	vertices       &Vertex       [required] // pointer to the vertices
-	vertex_count   u64           [required] // number of vertices in the array
+	vertices       &Vertex       [required]       // pointer to the vertices
+	vertex_count   u64           [required]           // number of vertices in the array
 	primitive_type PrimitiveType [required] // type of primitives to draw
 	states         &RenderStates = C.NULL // render states to use for drawing (NULL to use the default states)
 }

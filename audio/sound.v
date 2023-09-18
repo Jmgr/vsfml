@@ -1,6 +1,6 @@
 module audio
 
-import system
+import vsfml.system
 
 #include <SFML/Audio/Sound.h>
 

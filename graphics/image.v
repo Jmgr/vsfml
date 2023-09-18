@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/Image.h>
 
@@ -28,7 +28,7 @@ pub fn new_image(params ImageNewImageParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_create(u32(params.width), u32(params.height)))
 		if voidptr(result) == C.NULL {
-			return error('new_image failed with width=$params.width height=$params.height')
+			return error('new_image failed with width=${params.width} height=${params.height}')
 		}
 		return result
 	}
@@ -47,7 +47,7 @@ pub fn new_image_from_color(params ImageNewImageFromColorParams) !&Image {
 		result := &Image(C.sfImage_createFromColor(u32(params.width), u32(params.height),
 			*&C.sfColor(&params.color)))
 		if voidptr(result) == C.NULL {
-			return error('new_image_from_color failed with width=$params.width height=$params.height color=$params.color')
+			return error('new_image_from_color failed with width=${params.width} height=${params.height} color=${params.color}')
 		}
 		return result
 	}
@@ -56,8 +56,8 @@ pub fn new_image_from_color(params ImageNewImageFromColorParams) !&Image {
 // ImageNewImageFromColorParams: parameters for new_image_from_color
 pub struct ImageNewImageFromColorParams {
 pub:
-	width  u32   [required] // width of the image
-	height u32   [required] // height of the image
+	width  u32   [required]   // width of the image
+	height u32   [required]   // height of the image
 	color  Color [required] // fill color
 }
 
@@ -71,7 +71,7 @@ pub fn new_image_from_pixels(params ImageNewImageFromPixelsParams) !&Image {
 		result := &Image(C.sfImage_createFromPixels(u32(params.width), u32(params.height),
 			&byte(params.pixels)))
 		if voidptr(result) == C.NULL {
-			return error('new_image_from_pixels failed with width=$params.width height=$params.height')
+			return error('new_image_from_pixels failed with width=${params.width} height=${params.height}')
 		}
 		return result
 	}
@@ -80,8 +80,8 @@ pub fn new_image_from_pixels(params ImageNewImageFromPixelsParams) !&Image {
 // ImageNewImageFromPixelsParams: parameters for new_image_from_pixels
 pub struct ImageNewImageFromPixelsParams {
 pub:
-	width  u32   [required] // width of the image
-	height u32   [required] // height of the image
+	width  u32   [required]   // width of the image
+	height u32   [required]   // height of the image
 	pixels &byte [required] // array of pixels to copy to the image
 }
 
@@ -94,7 +94,7 @@ pub fn new_image_from_file(params ImageNewImageFromFileParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_createFromFile(params.filename.str))
 		if voidptr(result) == C.NULL {
-			return error('new_image_from_file failed with filename=$params.filename')
+			return error('new_image_from_file failed with filename=${params.filename}')
 		}
 		return result
 	}
@@ -115,7 +115,7 @@ pub fn new_image_from_memory(params ImageNewImageFromMemoryParams) !&Image {
 	unsafe {
 		result := &Image(C.sfImage_createFromMemory(voidptr(params.data), usize(params.size)))
 		if voidptr(result) == C.NULL {
-			return error('new_image_from_memory failed with size=$params.size')
+			return error('new_image_from_memory failed with size=${params.size}')
 		}
 		return result
 	}
@@ -125,7 +125,7 @@ pub fn new_image_from_memory(params ImageNewImageFromMemoryParams) !&Image {
 pub struct ImageNewImageFromMemoryParams {
 pub:
 	data voidptr [required] // pointer to the file data in memory
-	size u64     [required] // size of the data to load, in bytes
+	size u64     [required]     // size of the data to load, in bytes
 }
 
 // new_image_from_stream: create an image from a custom stream
@@ -201,8 +201,8 @@ pub fn new_void_mask_from_color(params ImageNewVoidMaskFromColorParams) {
 pub struct ImageNewVoidMaskFromColorParams {
 pub:
 	image &Image [required] // image object
-	color Color  [required] // color to make transparent
-	alpha byte   [required] // alpha value to assign to transparent pixels
+	color Color  [required]  // color to make transparent
+	alpha byte   [required]   // alpha value to assign to transparent pixels
 }
 
 // copy_image: copy pixels from an image onto another
@@ -224,11 +224,11 @@ pub fn (i &Image) copy_image(params ImageCopyImageParams) {
 // ImageCopyImageParams: parameters for copy_image
 pub struct ImageCopyImageParams {
 pub:
-	source      &Image  [required] // source image to copy
-	dest_x      u32     [required] // x coordinate of the destination position
-	dest_y      u32     [required] // y coordinate of the destination position
+	source      &Image  [required]  // source image to copy
+	dest_x      u32     [required]     // x coordinate of the destination position
+	dest_y      u32     [required]     // y coordinate of the destination position
 	source_rect IntRect [required] // sub-rectangle of the source image to copy
-	apply_alpha bool    [required] // should the copy take in account the source transparency?
+	apply_alpha bool    [required]    // should the copy take in account the source transparency?
 }
 
 // set_pixel: change the color of a pixel in an image
@@ -244,8 +244,8 @@ pub fn (i &Image) set_pixel(params ImageSetPixelParams) {
 // ImageSetPixelParams: parameters for set_pixel
 pub struct ImageSetPixelParams {
 pub:
-	x     u32   [required] // x coordinate of pixel to change
-	y     u32   [required] // y coordinate of pixel to change
+	x     u32   [required]   // x coordinate of pixel to change
+	y     u32   [required]   // y coordinate of pixel to change
 	color Color [required] // new color of the pixel
 }
 

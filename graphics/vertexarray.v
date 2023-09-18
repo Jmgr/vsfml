@@ -59,7 +59,7 @@ pub fn (v &VertexArray) get_vertex(index u64) !&Vertex {
 	unsafe {
 		result := &Vertex(C.sfVertexArray_getVertex(&C.sfVertexArray(v), usize(index)))
 		if voidptr(result) == C.NULL {
-			return error('get_vertex failed with index=$index')
+			return error('get_vertex failed with index=${index}')
 		}
 		return result
 	}

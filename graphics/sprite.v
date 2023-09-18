@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/Sprite.h>
 

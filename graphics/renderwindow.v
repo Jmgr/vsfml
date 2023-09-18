@@ -1,7 +1,7 @@
 module graphics
 
-import window
-import system
+import vsfml.window
+import vsfml.system
 
 #include <SFML/Graphics/RenderWindow.h>
 
@@ -60,10 +60,10 @@ fn C.sfTouch_getPositionRenderWindow(u32, &C.sfRenderWindow) C.sfVector2i
 // new_render_window: construct a new render window
 pub fn new_render_window(params RenderWindowNewRenderWindowParams) !&RenderWindow {
 	unsafe {
-		result := &RenderWindow(C.sfRenderWindow_create(*&C.sfVideoMode(&params.mode), params.title.str,
-			u32(params.style), &C.sfContextSettings(params.settings)))
+		result := &RenderWindow(C.sfRenderWindow_create(*&C.sfVideoMode(&params.mode),
+			params.title.str, u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_render_window failed with mode=$params.mode title=$params.title style=$params.style')
+			return error('new_render_window failed with mode=${params.mode} title=${params.title} style=${params.style}')
 		}
 		return result
 	}
@@ -84,7 +84,7 @@ pub fn new_render_window_unicode(params RenderWindowNewRenderWindowUnicodeParams
 		result := &RenderWindow(C.sfRenderWindow_createUnicode(*&C.sfVideoMode(&params.mode),
 			&u32(params.title), u32(params.style), &C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_render_window_unicode failed with mode=$params.mode style=$params.style')
+			return error('new_render_window_unicode failed with mode=${params.mode} style=${params.style}')
 		}
 		return result
 	}
@@ -105,7 +105,7 @@ pub fn new_render_window_from_handle(params RenderWindowNewRenderWindowFromHandl
 		result := &RenderWindow(C.sfRenderWindow_createFromHandle(*&C.sfWindowHandle(&params.handle),
 			&C.sfContextSettings(params.settings)))
 		if voidptr(result) == C.NULL {
-			return error('new_render_window_from_handle failed with handle=$params.handle')
+			return error('new_render_window_from_handle failed with handle=${params.handle}')
 		}
 		return result
 	}
@@ -208,8 +208,8 @@ pub fn (r &RenderWindow) set_icon(params RenderWindowSetIconParams) {
 // RenderWindowSetIconParams: parameters for set_icon
 pub struct RenderWindowSetIconParams {
 pub:
-	width  u32   [required] // icon's width, in pixels
-	height u32   [required] // icon's height, in pixels
+	width  u32 [required] // icon's width, in pixels
+	height u32 [required] // icon's height, in pixels
 	pixels &u8 [required] // pointer to the pixels in memory, format must be RGBA 32 bits
 }
 
@@ -431,8 +431,7 @@ pub:
 // draw_shape
 pub fn (r &RenderWindow) draw_shape(params RenderWindowDrawShapeParams) {
 	unsafe {
-		C.sfRenderWindow_drawShape(&C.sfRenderWindow(r), &C.sfShape(params.object),
-			&C.sfRenderStates(params.states))
+		C.sfRenderWindow_drawShape(&C.sfRenderWindow(r), &C.sfShape(params.object), &C.sfRenderStates(params.states))
 	}
 }
 
@@ -529,8 +528,8 @@ pub fn (r &RenderWindow) draw_primitives(params RenderWindowDrawPrimitivesParams
 // RenderWindowDrawPrimitivesParams: parameters for draw_primitives
 pub struct RenderWindowDrawPrimitivesParams {
 pub:
-	vertices       &Vertex       [required] // pointer to the vertices
-	vertex_count   u64           [required] // number of vertices in the array
+	vertices       &Vertex       [required]       // pointer to the vertices
+	vertex_count   u64           [required]           // number of vertices in the array
 	primitive_type PrimitiveType [required] // type of primitives to draw
 	states         &RenderStates = C.NULL // render states to use for drawing (NULL to use the default states)
 }

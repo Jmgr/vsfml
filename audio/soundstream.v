@@ -1,6 +1,6 @@
 module audio
 
-import system
+import vsfml.system
 
 #include <SFML/Audio/SoundStream.h>
 
@@ -45,10 +45,10 @@ pub type SoundStreamSeekCallback = fn (C.sfTime, voidptr) // Type of the callbac
 pub fn new_sound_stream(params SoundStreamNewSoundStreamParams) !&SoundStream {
 	unsafe {
 		result := &SoundStream(C.sfSoundStream_create(*&C.sfSoundStreamGetDataCallback(&params.on_get_data),
-			*&C.sfSoundStreamSeekCallback(&params.on_seek), u32(params.channel_count), u32(params.sample_rate),
-			voidptr(params.user_data)))
+			*&C.sfSoundStreamSeekCallback(&params.on_seek), u32(params.channel_count),
+			u32(params.sample_rate), voidptr(params.user_data)))
 		if voidptr(result) == C.NULL {
-			return error('new_sound_stream failed with on_get_data=$params.on_get_data on_seek=$params.on_seek channel_count=$params.channel_count sample_rate=$params.sample_rate')
+			return error('new_sound_stream failed with on_get_data=${params.on_get_data} on_seek=${params.on_seek} channel_count=${params.channel_count} sample_rate=${params.sample_rate}')
 		}
 		return result
 	}
@@ -58,7 +58,7 @@ pub fn new_sound_stream(params SoundStreamNewSoundStreamParams) !&SoundStream {
 pub struct SoundStreamNewSoundStreamParams {
 pub:
 	on_get_data   SoundStreamGetDataCallback [required] // function called when the stream needs more data (can't be NULL)
-	on_seek       SoundStreamSeekCallback    [required] // function called when the stream seeks (can't be NULL)
+	on_seek       SoundStreamSeekCallback    [required]    // function called when the stream seeks (can't be NULL)
 	channel_count u32                        [required] // number of channels to use (1 = mono, 2 = stereo)
 	sample_rate   u32                        [required] // sample rate of the sound (44100 = CD quality)
 	user_data     voidptr // data to pass to the callback functions

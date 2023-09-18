@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/Shape.h>
 
@@ -45,7 +45,7 @@ pub fn new_shape(params ShapeNewShapeParams) !&Shape {
 		result := &Shape(C.sfShape_create(*&C.sfShapeGetPointCountCallback(&params.get_point_count),
 			*&C.sfShapeGetPointCallback(&params.get_point), voidptr(params.user_data)))
 		if voidptr(result) == C.NULL {
-			return error('new_shape failed with get_point_count=$params.get_point_count get_point=$params.get_point')
+			return error('new_shape failed with get_point_count=${params.get_point_count} get_point=${params.get_point}')
 		}
 		return result
 	}
@@ -55,7 +55,7 @@ pub fn new_shape(params ShapeNewShapeParams) !&Shape {
 pub struct ShapeNewShapeParams {
 pub:
 	get_point_count ShapeGetPointCountCallback [required] // callback that provides the point count of the shape
-	get_point       ShapeGetPointCallback      [required] // callback that provides the points of the shape
+	get_point       ShapeGetPointCallback      [required]      // callback that provides the points of the shape
 	user_data       voidptr // data to pass to the callback functions
 }
 

@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/View.h>
 
@@ -38,7 +38,7 @@ pub fn new_view_from_rect(params ViewNewViewFromRectParams) !&View {
 	unsafe {
 		result := &View(C.sfView_createFromRect(*&C.sfFloatRect(&params.rectangle)))
 		if voidptr(result) == C.NULL {
-			return error('new_view_from_rect failed with rectangle=$params.rectangle')
+			return error('new_view_from_rect failed with rectangle=${params.rectangle}')
 		}
 		return result
 	}

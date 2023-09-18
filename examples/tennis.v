@@ -40,7 +40,7 @@ fn new_tennis() !Tennis {
 		mode: window.VideoMode{game_width, game_height, 32}
 		title: 'SFML Tennis'
 		style: u32(window.WindowStyle.titlebar) | u32(window.WindowStyle.close)
-	) !
+	)!
 	win.set_vertical_sync_enabled(true)
 
 	// Load the sounds used in the game
@@ -48,9 +48,9 @@ fn new_tennis() !Tennis {
 	ball_sound_buffer := audio.new_sound_buffer_from_memory(
 		data: ball_sound_file.data()
 		size_in_bytes: u64(ball_sound_file.len)
-	) !
+	)!
 	// loading from a file: ball_sound_buffer := audio.new_sound_buffer_from_file(filename: 'ball.wav') !
-	ball_sound := audio.new_sound() !
+	ball_sound := audio.new_sound()!
 	ball_sound.set_buffer(ball_sound_buffer)
 
 	// Create the SFML logo texture:
@@ -58,13 +58,13 @@ fn new_tennis() !Tennis {
 	sfml_logo_texture := graphics.new_texture_from_memory(
 		data: sfml_logo_file.data()
 		size_in_bytes: u64(sfml_logo_file.len)
-	) !
-	sfml_logo := graphics.new_sprite() !
+	)!
+	sfml_logo := graphics.new_sprite()!
 	sfml_logo.set_texture(sfml_logo_texture, true)
 	sfml_logo.set_position(system.Vector2f{170, 50})
 
 	// Create the left paddle
-	left_paddle := graphics.new_rectangle_shape() !
+	left_paddle := graphics.new_rectangle_shape()!
 	left_paddle.set_size(paddle_size - system.Vector2f{3, 3})
 	left_paddle.set_outline_thickness(3)
 	left_paddle.set_outline_color(graphics.color_black)
@@ -72,7 +72,7 @@ fn new_tennis() !Tennis {
 	left_paddle.set_origin(x: paddle_size.x / 2.0, y: paddle_size.y / 2.0)
 
 	// Create the right paddle
-	right_paddle := graphics.new_rectangle_shape() !
+	right_paddle := graphics.new_rectangle_shape()!
 	right_paddle.set_size(paddle_size - system.Vector2f{3, 3})
 	right_paddle.set_outline_thickness(3)
 	right_paddle.set_outline_color(graphics.color_black)
@@ -80,7 +80,7 @@ fn new_tennis() !Tennis {
 	right_paddle.set_origin(x: paddle_size.x / 2.0, y: paddle_size.y / 2.0)
 
 	// Create the ball
-	ball := graphics.new_circle_shape() !
+	ball := graphics.new_circle_shape()!
 	ball.set_radius(ball_radius - 3)
 	ball.set_outline_thickness(2)
 	ball.set_outline_color(graphics.color_black)
@@ -89,10 +89,10 @@ fn new_tennis() !Tennis {
 
 	// Load the text font
 	mut font_file := $embed_file('resources/tuffy.ttf')
-	font := graphics.new_font_from_memory(data: font_file.data(), size_in_bytes: u64(font_file.len)) !
+	font := graphics.new_font_from_memory(data: font_file.data(), size_in_bytes: u64(font_file.len))!
 
 	// Initialize the pause message
-	pause_message := graphics.new_text() !
+	pause_message := graphics.new_text()!
 	pause_message.set_font(font)
 	pause_message.set_character_size(40)
 	pause_message.set_position(x: 170.0, y: 200.0)
@@ -112,8 +112,8 @@ fn new_tennis() !Tennis {
 		ball: ball
 		pause_message: pause_message
 		win: win
-		clock: system.new_clock() !
-		ai_timer: system.new_clock() !
+		clock: system.new_clock()!
+		ai_timer: system.new_clock()!
 	}
 }
 
@@ -135,17 +135,17 @@ fn (mut t Tennis) game_loop() ! {
 							break
 						}
 						.space {
-							t.start_playing() !
+							t.start_playing()!
 						}
 						else {}
 					}
 				}
 				window.TouchBeganEvent {
-					t.start_playing() !
+					t.start_playing()!
 				}
 				window.SizeEvent {
 					// Window size changed, adjust view appropriately
-					view := graphics.new_view() !
+					view := graphics.new_view()!
 					view.set_size(x: game_width, y: game_height)
 					view.set_center(x: game_width / 2, y: game_height / 2)
 					t.win.set_view(view)
@@ -154,7 +154,7 @@ fn (mut t Tennis) game_loop() ! {
 			}
 		}
 
-		t.play() !
+		t.play()!
 
 		// Clear the window
 		t.win.clear(graphics.color_from_rgb(50, 50, 50))
@@ -220,7 +220,7 @@ fn (mut t Tennis) play() ! {
 
 	if window.touch_is_down(0) {
 		pos := graphics.touch_get_position_render_window(0, t.win)
-		mapped_pos := t.win.map_pixel_to_coords(pos, t.win.get_view() !)
+		mapped_pos := t.win.map_pixel_to_coords(pos, t.win.get_view()!)
 		t.left_paddle.set_position(x: t.left_paddle.get_position().x, y: mapped_pos.y)
 	}
 
@@ -314,6 +314,6 @@ fn (mut t Tennis) play() ! {
 }
 
 fn main() {
-	mut tennis := new_tennis() !
-	tennis.game_loop() !
+	mut tennis := new_tennis()!
+	tennis.game_loop()!
 }

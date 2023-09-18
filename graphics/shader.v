@@ -1,6 +1,6 @@
 module graphics
 
-import system
+import vsfml.system
 
 #include <SFML/Graphics/Shader.h>
 
@@ -49,7 +49,7 @@ pub fn new_shader_from_file(params ShaderNewShaderFromFileParams) !&Shader {
 		result := &Shader(C.sfShader_createFromFile(params.vertex_shader_filename.str,
 			params.geometry_shader_filename.str, params.fragment_shader_filename.str))
 		if voidptr(result) == C.NULL {
-			return error('new_shader_from_file failed with vertex_shader_filename=$params.vertex_shader_filename geometry_shader_filename=$params.geometry_shader_filename fragment_shader_filename=$params.fragment_shader_filename')
+			return error('new_shader_from_file failed with vertex_shader_filename=${params.vertex_shader_filename} geometry_shader_filename=${params.geometry_shader_filename} fragment_shader_filename=${params.fragment_shader_filename}')
 		}
 		return result
 	}
@@ -76,7 +76,7 @@ pub fn new_shader_from_memory(params ShaderNewShaderFromMemoryParams) !&Shader {
 		result := &Shader(C.sfShader_createFromMemory(params.vertex_shader.str, params.geometry_shader.str,
 			params.fragment_shader.str))
 		if voidptr(result) == C.NULL {
-			return error('new_shader_from_memory failed with vertex_shader=$params.vertex_shader geometry_shader=$params.geometry_shader fragment_shader=$params.fragment_shader')
+			return error('new_shader_from_memory failed with vertex_shader=${params.vertex_shader} geometry_shader=${params.geometry_shader} fragment_shader=${params.fragment_shader}')
 		}
 		return result
 	}
@@ -274,8 +274,8 @@ pub fn (s &Shader) set_float_uniform_array(params ShaderSetFloatUniformArrayPara
 pub struct ShaderSetFloatUniformArrayParams {
 pub:
 	name         string [required] // name of the uniform variable in GLSL
-	scalar_array &f32   [required] // pointer to array of \p float values
-	length       u64    [required] // number of elements in the array
+	scalar_array &f32   [required]   // pointer to array of \p float values
+	length       u64    [required]    // number of elements in the array
 }
 
 // setvec2uniformarray: specify values for \p vec2[] array uniform
@@ -289,9 +289,9 @@ pub fn (s &Shader) setvec2uniformarray(params ShaderSetvec2uniformarrayParams) {
 // ShaderSetvec2uniformarrayParams: parameters for setvec2uniformarray
 pub struct ShaderSetvec2uniformarrayParams {
 pub:
-	name         string    [required] // name of the uniform variable in GLSL
+	name         string    [required]    // name of the uniform variable in GLSL
 	vector_array &GlslVec2 [required] // pointer to array of \p vec2 values
-	length       u64       [required] // number of elements in the array
+	length       u64       [required]       // number of elements in the array
 }
 
 // setvec3uniformarray: specify values for \p vec3[] array uniform
@@ -305,9 +305,9 @@ pub fn (s &Shader) setvec3uniformarray(params ShaderSetvec3uniformarrayParams) {
 // ShaderSetvec3uniformarrayParams: parameters for setvec3uniformarray
 pub struct ShaderSetvec3uniformarrayParams {
 pub:
-	name         string    [required] // name of the uniform variable in GLSL
+	name         string    [required]    // name of the uniform variable in GLSL
 	vector_array &GlslVec3 [required] // pointer to array of \p vec3 values
-	length       u64       [required] // number of elements in the array
+	length       u64       [required]       // number of elements in the array
 }
 
 // setvec4uniformarray: specify values for \p vec4[] array uniform
@@ -321,9 +321,9 @@ pub fn (s &Shader) setvec4uniformarray(params ShaderSetvec4uniformarrayParams) {
 // ShaderSetvec4uniformarrayParams: parameters for setvec4uniformarray
 pub struct ShaderSetvec4uniformarrayParams {
 pub:
-	name         string    [required] // name of the uniform variable in GLSL
+	name         string    [required]    // name of the uniform variable in GLSL
 	vector_array &GlslVec4 [required] // pointer to array of \p vec4 values
-	length       u64       [required] // number of elements in the array
+	length       u64       [required]       // number of elements in the array
 }
 
 // setmat3uniformarray: specify values for \p mat3[] array uniform
@@ -337,9 +337,9 @@ pub fn (s &Shader) setmat3uniformarray(params ShaderSetmat3uniformarrayParams) {
 // ShaderSetmat3uniformarrayParams: parameters for setmat3uniformarray
 pub struct ShaderSetmat3uniformarrayParams {
 pub:
-	name         string    [required] // name of the uniform variable in GLSL
+	name         string    [required]    // name of the uniform variable in GLSL
 	matrix_array &GlslMat3 [required] // pointer to array of \p mat3 values
-	length       u64       [required] // number of elements in the array
+	length       u64       [required]       // number of elements in the array
 }
 
 // setmat4uniformarray: specify values for \p mat4[] array uniform
@@ -353,9 +353,9 @@ pub fn (s &Shader) setmat4uniformarray(params ShaderSetmat4uniformarrayParams) {
 // ShaderSetmat4uniformarrayParams: parameters for setmat4uniformarray
 pub struct ShaderSetmat4uniformarrayParams {
 pub:
-	name         string    [required] // name of the uniform variable in GLSL
+	name         string    [required]    // name of the uniform variable in GLSL
 	matrix_array &GlslMat4 [required] // pointer to array of \p mat4 values
-	length       u64       [required] // number of elements in the array
+	length       u64       [required]       // number of elements in the array
 }
 
 // bind: bind a shader for rendering (activate it)

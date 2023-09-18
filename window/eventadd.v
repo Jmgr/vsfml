@@ -64,11 +64,11 @@ pub fn process_event(evtType EventTypeEnum, evt &voidptr) ?Event {
 // to make sure that you process every pending event.
 pub fn (w &Window) poll_event() ?Event {
 	evt_type := int(0)
-	evt := voidptr(0)
+	evt := unsafe { nil }
 	if C.pollEventWindow(w, &evt_type, &evt) == 0 {
 		return none
 	}
-	return process_event(unsafe{EventTypeEnum(evt_type)}, evt)
+	return process_event(unsafe { EventTypeEnum(evt_type) }, evt)
 }
 
 struct EventType {
@@ -225,8 +225,25 @@ pub:
 }
 
 // Event defines a system event and its parameters
-pub type Event = CloseEvent | GainedFocusEvent | JoystickButtonPressedEvent | JoystickButtonReleasedEvent |
-	JoystickConnectedEvent | JoystickDisconnectedEvent | JoystickMovedEvent | KeyPressedEvent |
-	KeyReleasedEvent | LostFocusEvent | MouseButtonPressedEvent | MouseButtonReleasedEvent |
-	MouseEnteredEvent | MouseLeftEvent | MouseMovedEvent | MouseWheelScrollEvent | SensorChangedEvent |
-	SizeEvent | TextEnteredEvent | TouchBeganEvent | TouchEndedEvent | TouchMovedEvent
+pub type Event = CloseEvent
+	| GainedFocusEvent
+	| JoystickButtonPressedEvent
+	| JoystickButtonReleasedEvent
+	| JoystickConnectedEvent
+	| JoystickDisconnectedEvent
+	| JoystickMovedEvent
+	| KeyPressedEvent
+	| KeyReleasedEvent
+	| LostFocusEvent
+	| MouseButtonPressedEvent
+	| MouseButtonReleasedEvent
+	| MouseEnteredEvent
+	| MouseLeftEvent
+	| MouseMovedEvent
+	| MouseWheelScrollEvent
+	| SensorChangedEvent
+	| SizeEvent
+	| TextEnteredEvent
+	| TouchBeganEvent
+	| TouchEndedEvent
+	| TouchMovedEvent

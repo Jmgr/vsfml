@@ -1,6 +1,6 @@
 module network
 
-import system
+import vsfml.system
 
 #include <SFML/Network/Ftp.h>
 
@@ -13,49 +13,49 @@ pub enum FtpTransferMode {
 
 // FtpStatus: status codes possibly returned by a FTP response
 pub enum FtpStatus {
-	restart_marker_reply = 110 // Restart marker reply
-	service_ready_soon = 120 // Service ready in N minutes
+	restart_marker_reply           = 110 // Restart marker reply
+	service_ready_soon             = 120 // Service ready in N minutes
 	data_connection_already_opened = 125 // Data connection already opened, transfer starting
-	opening_data_connection = 150 // File status ok, about to open data connection
-	ok = 200 // Command ok
-	pointless_command = 202 // Command not implemented
-	system_status = 211 // System status, or system help reply
-	directory_status = 212 // Directory status
-	file_status = 213 // File status
-	help_message = 214 // Help message
-	system_type = 215 // NAME system type, where NAME is an official system name from the list in the Assigned Numbers document
-	service_ready = 220 // Service ready for new user
-	closing_connection = 221 // Service closing control connection
-	data_connection_opened = 225 // Data connection open, no transfer in progress
-	closing_data_connection = 226 // Closing data connection, requested file action successful
-	entering_passive_mode = 227 // Entering passive mode
-	logged_in = 230 // User logged in, proceed. Logged out if appropriate
-	file_action_ok = 250 // Requested file action ok
-	directory_ok = 257 // PATHNAME created
-	need_password = 331 // User name ok, need password
-	need_account_to_log_in = 332 // Need account for login
-	need_information = 350 // Requested file action pending further information
-	service_unavailable = 421 // Service not available, closing control connection
-	data_connection_unavailable = 425 // Can't open data connection
-	transfer_aborted = 426 // Connection closed, transfer aborted
-	file_action_aborted = 450 // Requested file action not taken
-	local_error = 451 // Requested action aborted, local error in processing
-	insufficient_storage_space = 452 // Requested action not taken; insufficient storage space in system, file unavailable
-	command_unknown = 500 // Syntax error, command unrecognized
-	parameters_unknown = 501 // Syntax error in parameters or arguments
-	command_not_implemented = 502 // Command not implemented
-	bad_command_sequence = 503 // Bad sequence of commands
-	parameter_not_implemented = 504 // Command not implemented for that parameter
-	not_logged_in = 530 // Not logged in
-	need_account_to_store = 532 // Need account for storing files
-	file_unavailable = 550 // Requested action not taken, file unavailable
-	page_type_unknown = 551 // Requested action aborted, page type unknown
-	not_enough_memory = 552 // Requested file action aborted, exceeded storage allocation
-	filename_not_allowed = 553 // Requested action not taken, file name not allowed
-	invalid_response = 1000 // Response is not a valid FTP one
-	connection_failed = 1001 // Connection with server failed
-	connection_closed = 1002 // Connection with server closed
-	invalid_file = 1003 // Invalid file to upload / download
+	opening_data_connection        = 150 // File status ok, about to open data connection
+	ok                             = 200 // Command ok
+	pointless_command              = 202 // Command not implemented
+	system_status                  = 211 // System status, or system help reply
+	directory_status               = 212 // Directory status
+	file_status                    = 213 // File status
+	help_message                   = 214 // Help message
+	system_type                    = 215 // NAME system type, where NAME is an official system name from the list in the Assigned Numbers document
+	service_ready                  = 220 // Service ready for new user
+	closing_connection             = 221 // Service closing control connection
+	data_connection_opened         = 225 // Data connection open, no transfer in progress
+	closing_data_connection        = 226 // Closing data connection, requested file action successful
+	entering_passive_mode          = 227 // Entering passive mode
+	logged_in                      = 230 // User logged in, proceed. Logged out if appropriate
+	file_action_ok                 = 250 // Requested file action ok
+	directory_ok                   = 257 // PATHNAME created
+	need_password                  = 331 // User name ok, need password
+	need_account_to_log_in         = 332 // Need account for login
+	need_information               = 350 // Requested file action pending further information
+	service_unavailable            = 421 // Service not available, closing control connection
+	data_connection_unavailable    = 425 // Can't open data connection
+	transfer_aborted               = 426 // Connection closed, transfer aborted
+	file_action_aborted            = 450 // Requested file action not taken
+	local_error                    = 451 // Requested action aborted, local error in processing
+	insufficient_storage_space     = 452 // Requested action not taken; insufficient storage space in system, file unavailable
+	command_unknown                = 500 // Syntax error, command unrecognized
+	parameters_unknown             = 501 // Syntax error in parameters or arguments
+	command_not_implemented        = 502 // Command not implemented
+	bad_command_sequence           = 503 // Bad sequence of commands
+	parameter_not_implemented      = 504 // Command not implemented for that parameter
+	not_logged_in                  = 530 // Not logged in
+	need_account_to_store          = 532 // Need account for storing files
+	file_unavailable               = 550 // Requested action not taken, file unavailable
+	page_type_unknown              = 551 // Requested action aborted, page type unknown
+	not_enough_memory              = 552 // Requested file action aborted, exceeded storage allocation
+	filename_not_allowed           = 553 // Requested action not taken, file name not allowed
+	invalid_response               = 1000 // Response is not a valid FTP one
+	connection_failed              = 1001 // Connection with server failed
+	connection_closed              = 1002 // Connection with server closed
+	invalid_file                   = 1003 // Invalid file to upload / download
 }
 
 fn C.sfFtpListingResponse_destroy(&C.sfFtpListingResponse)
@@ -240,7 +240,7 @@ pub fn (f &Ftp) connect(params FtpConnectParams) !&FtpResponse {
 		result := &FtpResponse(C.sfFtp_connect(&C.sfFtp(f), *&C.sfIpAddress(&params.server),
 			u16(params.port), *&C.sfTime(&params.timeout)))
 		if voidptr(result) == C.NULL {
-			return error('connect failed with server=$params.server port=$params.port timeout=$params.timeout')
+			return error('connect failed with server=${params.server} port=${params.port} timeout=${params.timeout}')
 		}
 		return result
 	}
@@ -249,8 +249,8 @@ pub fn (f &Ftp) connect(params FtpConnectParams) !&FtpResponse {
 // FtpConnectParams: parameters for connect
 pub struct FtpConnectParams {
 pub:
-	server  IpAddress   [required] // name or address of the FTP server to connect to
-	port    u16         [required] // port used for the connection
+	server  IpAddress   [required]   // name or address of the FTP server to connect to
+	port    u16         [required]         // port used for the connection
 	timeout system.Time [required] // maximum time to wait
 }
 
@@ -274,7 +274,7 @@ pub fn (f &Ftp) login(name string, password string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_login(&C.sfFtp(f), name.str, password.str))
 		if voidptr(result) == C.NULL {
-			return error('login failed with name=$name password=$password')
+			return error('login failed with name=${name} password=${password}')
 		}
 		return result
 	}
@@ -326,7 +326,7 @@ pub fn (f &Ftp) get_directory_listing(directory string) !&FtpListingResponse {
 	unsafe {
 		result := &FtpListingResponse(C.sfFtp_getDirectoryListing(&C.sfFtp(f), directory.str))
 		if voidptr(result) == C.NULL {
-			return error('get_directory_listing failed with directory=$directory')
+			return error('get_directory_listing failed with directory=${directory}')
 		}
 		return result
 	}
@@ -338,7 +338,7 @@ pub fn (f &Ftp) change_directory(directory string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_changeDirectory(&C.sfFtp(f), directory.str))
 		if voidptr(result) == C.NULL {
-			return error('change_directory failed with directory=$directory')
+			return error('change_directory failed with directory=${directory}')
 		}
 		return result
 	}
@@ -362,7 +362,7 @@ pub fn new_ftp_response_directory(params FtpNewFtpResponseDirectoryParams) !&Ftp
 	unsafe {
 		result := &FtpResponse(C.sfFtp_createDirectory(&C.sfFtp(params.ftp), params.name.str))
 		if voidptr(result) == C.NULL {
-			return error('new_ftp_response_directory failed with name=$params.name')
+			return error('new_ftp_response_directory failed with name=${params.name}')
 		}
 		return result
 	}
@@ -371,7 +371,7 @@ pub fn new_ftp_response_directory(params FtpNewFtpResponseDirectoryParams) !&Ftp
 // FtpNewFtpResponseDirectoryParams: parameters for new_ftp_response_directory
 pub struct FtpNewFtpResponseDirectoryParams {
 pub:
-	ftp  &Ftp   [required] // ftp object
+	ftp  &Ftp   [required]   // ftp object
 	name string [required] // name of the directory to create
 }
 
@@ -384,7 +384,7 @@ pub fn (f &Ftp) delete_directory(name string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_deleteDirectory(&C.sfFtp(f), name.str))
 		if voidptr(result) == C.NULL {
-			return error('delete_directory failed with name=$name')
+			return error('delete_directory failed with name=${name}')
 		}
 		return result
 	}
@@ -397,7 +397,7 @@ pub fn (f &Ftp) rename_file(file string, newName string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_renameFile(&C.sfFtp(f), file.str, newName.str))
 		if voidptr(result) == C.NULL {
-			return error('rename_file failed with file=$file newName=$newName')
+			return error('rename_file failed with file=${file} newName=${newName}')
 		}
 		return result
 	}
@@ -412,7 +412,7 @@ pub fn (f &Ftp) delete_file(name string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_deleteFile(&C.sfFtp(f), name.str))
 		if voidptr(result) == C.NULL {
-			return error('delete_file failed with name=$name')
+			return error('delete_file failed with name=${name}')
 		}
 		return result
 	}
@@ -425,10 +425,10 @@ pub fn (f &Ftp) delete_file(name string) !&FtpResponse {
 // of your application.
 pub fn (f &Ftp) download(params FtpDownloadParams) !&FtpResponse {
 	unsafe {
-		result := &FtpResponse(C.sfFtp_download(&C.sfFtp(f), params.remote_file.str,
-			params.local_path.str, *&C.sfFtpTransferMode(&params.mode)))
+		result := &FtpResponse(C.sfFtp_download(&C.sfFtp(f), params.remote_file.str, params.local_path.str,
+			*&C.sfFtpTransferMode(&params.mode)))
 		if voidptr(result) == C.NULL {
-			return error('download failed with remote_file=$params.remote_file local_path=$params.local_path mode=$params.mode')
+			return error('download failed with remote_file=${params.remote_file} local_path=${params.local_path} mode=${params.mode}')
 		}
 		return result
 	}
@@ -452,7 +452,7 @@ pub fn (f &Ftp) upload(params FtpUploadParams) !&FtpResponse {
 		result := &FtpResponse(C.sfFtp_upload(&C.sfFtp(f), params.local_file.str, params.remote_path.str,
 			*&C.sfFtpTransferMode(&params.mode), int(params.append)))
 		if voidptr(result) == C.NULL {
-			return error('upload failed with local_file=$params.local_file remote_path=$params.remote_path mode=$params.mode append=$params.append')
+			return error('upload failed with local_file=${params.local_file} remote_path=${params.remote_path} mode=${params.mode} append=${params.append}')
 		}
 		return result
 	}
@@ -476,7 +476,7 @@ pub fn (f &Ftp) send_command(command string, parameter string) !&FtpResponse {
 	unsafe {
 		result := &FtpResponse(C.sfFtp_sendCommand(&C.sfFtp(f), command.str, parameter.str))
 		if voidptr(result) == C.NULL {
-			return error('send_command failed with command=$command parameter=$parameter')
+			return error('send_command failed with command=${command} parameter=${parameter}')
 		}
 		return result
 	}
